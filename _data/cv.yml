@@ -20,7 +20,7 @@ Hyo-Eun Choi:
           location:         "Handong Global University"
           description:      "BS in Computer Science & Electironic Engineer"
     employment:
-        - time:             "Jan 2019 - Jun 2019"
+        - time:             "2019.01 - 2019.06"
           location:         "Seoul"
           company:          "Eloicube"
           position:         "ELK + .NET Core Developer"
@@ -28,7 +28,7 @@ Hyo-Eun Choi:
             - "Construct ELK system with syslog-ng"
             - "Auto collecting information of firewalls"
             - "Improved security of a system with authentication techniques such as TLS certificates and Proxy authentication."
-        - time:             "Feb 2018 - Aug 2018"
+        - time:             "2018.02 - 2018.08"
           location:         "Kalamazoo"
           company:          "Western Michigan University"
           position:         "Research Intern"
