@@ -1550,7 +1550,7 @@ a > .item__header.disabled, a > .item__header:disabled, a.item__header.disabled,
 
 .shadow { box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
 
-.timeline-container { width: 80%; padding: 50px 0 0 0; margin: 40px auto 0px 0px; position: relative; }
+.timeline-container { padding: 50px 0 0 0; margin: 40px auto 0px 0px; position: relative; }
 .timeline-container:before { content: ''; position: absolute; top: 0; left: 10px; margin-left: -1px; width: 2px; height: 100%; background: #CCD1D9; z-index: 1; }
 
 .timeline-block { display: flex; justify-content: space-between; }
