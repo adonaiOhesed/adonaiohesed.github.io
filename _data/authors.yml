@@ -1,0 +1,47 @@
+default:                                                      # Fallback if nothing is specified
+  initial:      Hyo-Eun Choi                                   # used for author lookup in posts and for first two characters in the about page back button
+  name:         "Hyo-Eun Choi"                               # used to display author name
+  cover:        /assets/mountain-alternative-cover.jpg        # OPTIONAL: defines location of cover image in about page
+  picture:      /assets/profile_photo.jpg                           # OPTIONAL: author picture
+  bio:          This is my bio!                               # OPTIONAL: text below author name in posts
+  location:     Seoul                                       # OPTIONAL: used to display location of the author
+  website:                          						  # OPTIONAL: link to the author of a post
+  email:                                                      # OPTIONAL: used in the about page
+  twitter:                                                    # OPTIONAL: used in the about page
+  linkedin:                                                   # OPTIONAL: used in the about page
+  xing:                                                       # OPTIONAL: used in the about page
+  github:                                                     # OPTIONAL: used in the about page
+  stackoverflow:                                              # OPTIONAL: used in the about page
+  facebook:                                                   # OPTIONAL: used in the about page
+  gplus:                                                      # OPTIONAL: used in the about page
+  soundcloud:                                                 # OPTIONAL: used in the about page
+  youtube:                                                    # OPTIONAL: used in the about page
+  pinterest:                                                  # OPTIONAL: used in the about page
+  dribble:                                                    # OPTIONAL: used in the about page
+  behance:                                                    # OPTIONAL: used in the about page
+  spotify:                                                    # OPTIONAL: used in the about page
+  twitch:                                                     # OPTIONAL: used in the about page
+  s500px:                                                     # OPTIONAL: used in the about page
+  reddit:                                                     # OPTIONAL: used in the about page
+Hyo-Eun Choi:
+  type      : person # "person" (default), "organization"
+  initial   : Hyo-Eun Choi   
+  name      : Hyo-Eun Choi
+  cover     :        
+  picture   : /assets/profile_photo.jpg  
+  bio       : Security Software Engineer
+  location  : Baltimore
+  url       : adonaiohesed.github.io
+  avatar    : /assets/profile_photo.jpg # path or url of avatar image (square)
+  email     : hchoi53@gmail.com
+  facebook  : # "user_name" the last part of your profile url, e.g. https://www.facebook.com/user_name
+  twitter   : # "user_name" the last part of your profile url, e.g. https://twitter.com/user_name
+  weibo     : # "user_id"   the last part of your profile url, e.g. https://www.weibo.com/user_id/profile?...
+  googleplus: # "user_id"   the last part of your profile url, e.g. https://plus.google.com/u/0/user_id
+  telegram  : # "user_name" the last part of your profile url, e.g. https://t.me/user_name
+  medium    : # "user_name" the last part of your profile url, e.g. https://medium.com/user_name
+  zhihu     : # "user_name" the last part of your profile url, e.g. https://www.zhihu.com/people/user_name
+  douban    : # "user_name" the last part of your profile url, e.g. https://www.douban.com/people/user_name
+  linkedin  : hyoeun-choi # "user_name" the last part of your profile url, e.g. https://www.linkedin.com/in/user_name
+  github    : adonaiohesed # "user_name" the last part of your profile url, e.g. https://github.com/user_name
+  npm       : # "user_name" the last part of your profile url, e.g. https://www.npmjs.com/~user_name

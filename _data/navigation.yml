@@ -1,0 +1,18 @@
+header:
+  - titles:
+      en      : &EN       About
+      ko      : &KO       소개
+      ko-KR   : *KO
+    url: /about.html
+
+  - titles:
+      en      : &EN       Blog
+      ko      : &KO       블로그
+      ko-KR   : *KO
+    url: /
+
+  - titles:
+      en      : &EN       Tags
+      ko      : &KO       테그
+      ko-KR   : *KO
+    url: /tags.html

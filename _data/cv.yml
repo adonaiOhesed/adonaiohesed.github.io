@@ -1,0 +1,64 @@
+Hyo-Eun Choi:
+    profile: My mission is to lead the world's information safely and make it universally accessible and useful.
+    skills:
+        - "C, C++, OpenMP, MPI"
+        - "Python, AWS EC2, AWS Lambda, AWS API Gateway, Django"
+        - "Ionic3+, Angular, Firebase, Apache, Flaske"
+        - "C#, .NET Core, Elastic search, Kibana, Logstash, Syslog-ng, Node-js, Nginx, Search-guard"
+        - "IoT construction with ARTIK710, Nucleo, ARTIK cloud"
+        - "Java, MySQL, Git, TFS, Firemon, Algosec, Docker"
+    publications:
+        - name:             "J. Kim, H. Choi, S. Bae"
+          title:            "Efficient Parallel All-Pairs Shortest Paths Algorithm for Complex Graph Analysis"
+          place:            "Proceedings of the 47th International Conference on Parallel Processing Companion(ICPP)."
+          time:             "ACM. 2018."
+    education:
+        - time:             "2019 - current"
+          location:         "Johns Hokpins University"
+          description:      "MS in Information Security Institution"  
+        - time:             "2010 - 2019&nbsp;&nbsp;&nbsp;&nbsp;"
+          location:         "Handong Global University"
+          description:      "BS in Computer Science & Electironic Engineer"
+    employment:
+        - time:             "Jan 2019 - Jun 2019"
+          location:         "Seoul"
+          company:          "Eloicube"
+          position:         "ELK + .NET Core Developer"
+          responsibilities:
+            - "Construct ELK system with syslog-ng"
+            - "Auto collecting information of firewalls"
+            - "Improved security of a system with authentication techniques such as TLS certificates and Proxy authentication."
+        - time:             "Feb 2018 - Aug 2018"
+          location:         "Kalamazoo"
+          company:          "Western Michigan University"
+          position:         "Research Intern"
+          responsibilities:
+            - "Be resopnsible for the experiment code and algorithum written in the paper"
+            - "Efficient Parallel All-Pairs Shortest Paths Algorithm for Complex Graph Analysis, in International Conference on Parallel Processing (ICPP) Eugene, Oregon, USA, Aug. 2018"
+    projects:
+        - time:             "Jan 2019 - Jun 2019"
+          team:             "Team of 3"
+          title:            "Firewall & Network Security Management Software"
+          technologies:     "Elasticsearch Kibana Search-guard Syslog-ng .net core"
+          responsibilities:
+            - "Construct system infrastructure as a team leader and leading researcher"
+            - "After collecting various logs with syslog-ng, the logs are processed through .net core and then loaded into elasticsearch for visualizing with kibana"
+            - "Development in-house visualization program which is monitoring of performance, error status, and health check using logs of in-house application"
+            - "Establishment of cluster, TLS and HTTPS security environment between nodes"
+        - time:             "Aug 2017 - Sep 2018"
+          team:             "Team of 3"
+          title:            "Car & Taxi Sharing Service"
+          technologies:     "Ionic, few of AWS services, Firebase, Apache"
+          responsibilities:
+            - "Leading project as main developer and team leader"
+            - "It is for Handong Global University students and used by over 80% of students."
+            - "It runs on three different paltform which are web, android and ios."
+            - "http://itaxi.handong.edu"
+        - time:             "Jun 2016 - Aug 2017"
+          team:             "Team of 10"
+          title:            "Intranet on Handong Global University"
+          technologies:     "Django, Nmap, Nikto, Nussus on Kali Linux"
+          responsibilities:
+            - "Collect developers and lead as a project manager"
+            - "Improved security of the exist intranet by testing of vulnerability and make a renewal version"
+            - "https://i7.handong.edu"

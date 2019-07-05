@@ -1,0 +1,1412 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Syslog-Ng 설치 및 사용 방법 - H.Choi</title>
+
+<meta name="description" content="syslog-ng란?  로그를 다루는 프로그램이다.  기존의 리눅스에 포함되어 있는 syslog의 상위 버전이라 할 수 있다.  CentOS7의 경우는 syslog보다 조금 더 상위버전인 rsyslog가 있지만 그것보다 더 상위버전인 것이 syslog-ng이다.RHEL or Cen...">
+<link rel="canonical" href="http://localhost:4000/2019/05/12/syslog-ng_install.html"><link rel="alternate" type="application/rss+xml" title="H.Choi" href="/feed.xml"><!-- start favicons snippet, use https://realfavicongenerator.net/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"><link rel="manifest" href="/assets/site.webmanifest"><link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#fc4d50"><link rel="shortcut icon" href="/assets/favicon.ico">
+
+<meta name="msapplication-TileColor" content="#ffc40d"><meta name="msapplication-config" content="/assets/browserconfig.xml">
+
+<meta name="theme-color" content="#ffffff">
+<!-- end favicons snippet --><link rel="stylesheet" href="/assets/css/main.css"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" ><!-- start custom head snippets -->
+
+<!-- end custom head snippets --><script>(function() {
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+
+  window.decodeUrl = function(str) {
+    return str ? decodeURIComponent(str.replace(/\+/g, '%20')) : '';
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  };
+
+  window.isOverallScroller = function(node) {
+    return node === document.documentElement || node === document.body || node === window;
+  };
+
+  window.isFormElement = function(node) {
+    var tagName = node.tagName;
+    return tagName === 'INPUT' || tagName === 'SELECT' || tagName === 'TEXTAREA';
+  };
+
+  window.pageLoad = (function () {
+    var loaded = false, cbs = [];
+    window.addEventListener('load', function () {
+      var i;
+      loaded = true;
+      if (cbs.length > 0) {
+        for (i = 0; i < cbs.length; i++) {
+          cbs[i]();
+        }
+      }
+    });
+    return {
+      then: function(cb) {
+        cb && (loaded ? cb() : (cbs.push(cb)));
+      }
+    };
+  })();
+})();
+(function() {
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+})();
+(function() {
+  var Set = (function() {
+    var add = function(item) {
+      var i, data = this._data;
+      for (i = 0; i < data.length; i++) {
+        if (data[i] === item) {
+          return;
+        }
+      }
+      this.size ++;
+      data.push(item);
+      return data;
+    };
+
+    var Set = function(data) {
+      this.size = 0;
+      this._data = [];
+      var i;
+      if (data.length > 0) {
+        for (i = 0; i < data.length; i++) {
+          add.call(this, data[i]);
+        }
+      }
+    };
+    Set.prototype.add = add;
+    Set.prototype.get = function(index) { return this._data[index]; };
+    Set.prototype.has = function(item) {
+      var i, data = this._data;
+      for (i = 0; i < data.length; i++) {
+        if (this.get(i) === item) {
+          return true;
+        }
+      }
+      return false;
+    };
+    Set.prototype.is = function(map) {
+      if (map._data.length !== this._data.length) { return false; }
+      var i, j, flag, tData = this._data, mData = map._data;
+      for (i = 0; i < tData.length; i++) {
+        for (flag = false, j = 0; j < mData.length; j++) {
+          if (tData[i] === mData[j]) {
+            flag = true;
+            break;
+          }
+        }
+        if (!flag) { return false; }
+      }
+      return true;
+    };
+    Set.prototype.values = function() {
+      return this._data;
+    };
+    return Set;
+  })();
+
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    };
+    var end = function(type, url) {
+      var s, q, qi, cbs, i, j, cur, val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j];
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, q, qi, node, i, cur,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  };
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+})();
+</script><script>
+  (function() {
+    var TEXT_VARIABLES = {
+      version: '2.2.4',
+      sources: {
+        font_awesome: 'https://use.fontawesome.com/releases/v5.0.13/css/all.css',
+        jquery: 'https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js',
+        leancloud_js_sdk: '//cdn1.lncld.net/static/js/3.4.1/av-min.js',
+        chart: 'https://cdn.bootcss.com/Chart.js/2.7.2/Chart.bundle.min.js',
+        gitalk: {
+          js: 'https://cdn.bootcss.com/gitalk/1.2.2/gitalk.min.js',
+          css: 'https://cdn.bootcss.com/gitalk/1.2.2/gitalk.min.css'
+        },
+        valine: 'https://unpkg.com/valine/dist/Valine.min.js',
+        mathjax: 'https://cdn.bootcss.com/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML',
+        mermaid: 'https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js'
+      },
+      site: {
+        toc: {
+          selectors: 'h1,h2,h3'
+        }
+      },
+      paths: {
+        search_js: '/assets/search.js'
+      }
+    };
+    window.TEXT_VARIABLES = TEXT_VARIABLES;
+  })();
+</script></head>
+  <body>
+    <div class="root" data-is-touch="false">
+      <div class="layout--page js-page-root"><div class="page__main js-page-main page__viewport has-aside cell cell--auto">
+
+      <div class="page__main-inner"><div class="page__header d-print-none"><header class="header"><div class="main" style="display: flex; justify-content: center">
+      <!--<div class="header__title">
+        <div class="header__brand"><a title="Room for me.
+" href="/">H.Choi</a></div><button class="button button--secondary button--circle search-button js-search-toggle"><i class="fas fa-search"></i></button></div>--><nav class="navigation">
+        <ul><li class="navigation__item" style="margin-left: 23px; margin-right: 23px"><a href="/about.html">About</a></li><li class="navigation__item" style="margin-left: 23px; margin-right: 23px"><a href="/">Blog</a></li><li class="navigation__item" style="margin-left: 23px; margin-right: 23px"><a href="/tags.html">Tags</a></li><li><button class="button button--secondary button--circle search-button js-search-toggle"><i class="fas fa-search"></i></button></li></ul>
+      </nav></div>
+  </header>
+</div><div class="page__content"><div class ="main"><div class="grid grid--reverse">
+
+              <div class="col-aside d-print-none js-col-aside"><aside class="page__aside js-page-aside"><div class="toc-aside js-toc-root"></div></aside></div>
+
+              <div class="col-main cell cell--auto"><!-- start custom main top snippet -->
+
+<!-- end custom main top snippet --><article itemscope itemtype="http://schema.org/Article"><div class="article__header"><header><h1>Syslog-Ng 설치 및 사용 방법</h1></header><span class="split-space">&nbsp;</span>
+          <a class="edit-on-github"
+            title="Edit on Github"
+            href="https://github.com/adonaiohesed/adonaiohesed.github.io/tree/master/_posts/2019-05-12-syslog-ng_install.md">
+            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Syslog-Ng 설치 및 사용 방법"><div class="article__info clearfix"><ul class="left-col menu"><li>
+              <a class="button button--secondary button--pill button--sm"
+                href="/archive.html?tag=syslog-ng">syslog-ng</a>
+            </li></ul><ul class="right-col menu"><li><i class="far fa-calendar-alt"></i> <span>May 12, 2019</span>
+            </li></ul></div><meta itemprop="author" content="Hyo-Eun Choi"/><meta itemprop="datePublished" content="2019-05-12T00:00:00+09:00">
+    <meta itemprop="keywords" content="syslog-ng"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
+
+<!-- end custom article top snippet --><div class="article__content" itemprop="articleBody"><h2 id="syslog-ng란">syslog-ng란?</h2>
+<ul>
+  <li>로그를 다루는 프로그램이다.</li>
+  <li>기존의 리눅스에 포함되어 있는 syslog의 상위 버전이라 할 수 있다.</li>
+  <li>CentOS7의 경우는 syslog보다 조금 더 상위버전인 rsyslog가 있지만 그것보다 더 상위버전인 것이 syslog-ng이다.</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="rhel-or-centos7-위에-설치">RHEL or CentOS7 위에 설치</h2>
+<ol>
+  <li>RHEL은 아래 과정을 하고 CentOS은 안 해도 된다. syslog-ng를 실행하기 위한 packages를 받을 수 있게 설정하는 작업.
+    <div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> subscription-manager repos <span class="nt">--enable</span> rhel-7-server-optional-rpms
+</code></pre></div>    </div>
+  </li>
+  <li>RPM package에다가 RHEL에 포함되어 있지 않은 Extra Packages for Enterprise Linux(EPEL)을 설치하는 작업
+    <div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+<span class="gp">$</span> rpm <span class="nt">-Uvh</span> epel-release-latest-7.noarch.rpm
+</code></pre></div>    </div>
+  </li>
+  <li>본격적인 syslog-ng 설치 작업.
+    <div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> <span class="nb">cd</span> /etc/yum.repos.d/
+<span class="gp">$</span> wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng319/repo/epel-7/czanik-syslog-ng319-epel-7.repo
+<span class="gp">$</span> yum install syslog-ng
+<span class="gp">$</span> systemctl <span class="nb">enable </span>syslog-ng
+<span class="gp">$</span> systemctl start syslog-ng
+</code></pre></div>    </div>
+  </li>
+  <li>위 설치가 끝나면 기존에 존재하는 rsyslog or syslog를 삭제시켜 충돌을 방지시킨다.<br />
+    <div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> yum erase rsyslog
+</code></pre></div>    </div>
+    <p>다른 리눅스 버전의 경우 아래 링크 참조<br />
+<a href="https://www.syslog-ng.com/products/open-source-log-management/3rd-party-binaries.aspx">syslog-ng 공식 installation 사이트</a></p>
+  </li>
+</ol>
+
+<p><br /></p>
+
+<h2 id="syslog-ng를-데몬으로-돌리기">Syslog-ng를 데몬으로 돌리기</h2>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> systemctl <span class="nb">enable </span>syslog-ng
+<span class="gp">$</span> systemctl start syslog-ng
+</code></pre></div></div>
+<ul>
+  <li>위의 과정에서 start(restart)에 에러가 나는 경우가 있을 수 있다. port에 관한 설정을 했을때 port 상태를 확인해야한다.
+    <div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> semanage port <span class="nt">-l</span> | <span class="nb">grep </span>syslog
+<span class="go">syslog_tls_port_t              tcp      6514, 10514
+syslog_tls_port_t              udp      6514, 10514
+syslogd_port_t                 tcp      601, 20514
+syslogd_port_t                 udp      514, 601, 20514
+</span></code></pre></div>    </div>
+  </li>
+  <li>여기에서 자신이 받고자 하는 port 정보가 없으면 아래의 명령어로 port를 추가시킨후 재실행 한다.
+    <div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> semanage port <span class="nt">-a</span> <span class="nt">-t</span> syslogd_port_t <span class="nt">-p</span> udp 7071
+<span class="gp">$</span> systemctl reset-failed syslog-ng
+<span class="gp">$</span> systemctl restart syslog-ng
+</code></pre></div>    </div>
+  </li>
+  <li>syslog-ng는 syslog를 이용하기 때문에 기존 syslog의 port값 정보를 이용한다.</li>
+</ul>
+
+<blockquote>
+  <p>semanage는 SELinux에 사용되는 명령어이다.
+SELinux는 RHEL 기반의 배포판 커널에 이식된 커널 레벨의 보안 모듈이다.</p>
+</blockquote>
+
+<h2 id="기본-개념">기본 개념</h2>
+<p>syslog-ng는 syslog-ng.conf 파일을 프로그래밍하면서 조작하는 프로그램이다.<br />
+크게 3가지 부분으로 나뉜다.</p>
+
+<dl>
+  <dt>source &lt;identifier&gt; { params }</dt>
+  <dd>어디에서 로그를 수집할 것인지</dd>
+  <dt>filter &lt;identifier&gt; { params }</dt>
+  <dd>어떤 로그만 수집할 것인지</dd>
+  <dt>destination &lt;identifier&gt; { params }</dt>
+  <dd>수집된 로그를 어디로 보낼 것인지</dd>
+</dl>
+
+<p>identifier는 모든 단어가 허용된다. (예약어와 충돌이 없다.)<br />
+위의 3가지 요소를 배치하여 최종 실행 코드를 작성한다.</p>
+<blockquote>
+  <p>log{ source(s1); source(s2); … filter(f1); filter(f2); … destination(d1); destination(d2); … };</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="예시">예시</h2>
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@<span class="n">version</span>:<span class="m">3</span>.<span class="m">19</span>
+@<span class="n">include</span> <span class="s2">"scl.conf"</span>
+
+<span class="n">options</span> {
+     <span class="n">flush</span>-<span class="n">timeout</span>(<span class="m">300000</span>);
+     <span class="n">time_reopen</span> (<span class="m">100</span>);
+     <span class="n">log_fifo_size</span> (<span class="m">100000</span>);
+     <span class="n">chain_hostnames</span> (<span class="n">off</span>);
+     <span class="n">use_dns</span> (<span class="n">no</span>);
+     <span class="n">dns_cache</span> (<span class="n">no</span>);
+     <span class="n">use_fqdn</span> (<span class="n">no</span>);
+     <span class="n">create_dirs</span> (<span class="n">no</span>);
+     <span class="n">keep_hostname</span> (<span class="n">yes</span>);
+     <span class="n">flush</span>-<span class="n">lines</span>(<span class="m">5</span>);
+};
+
+<span class="n">template</span> <span class="n">template_date_format</span> {
+    <span class="n">template</span>(<span class="s2">"${YEAR}-${MONTH}-${DAY} ${HOUR}:${MIN}:${SEC} ${HOST} ${MSGHDR}${MSG}\n"</span>);
+    <span class="n">template_escape</span>(<span class="n">no</span>);
+};
+
+<span class="n">source</span> <span class="n">s_sys</span> {
+    <span class="n">system</span>();
+    <span class="n">internal</span>();
+    <span class="n">udp</span>(<span class="n">ip</span>(<span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>) <span class="n">port</span>(<span class="m">514</span>));
+};
+<span class="n">source</span> <span class="n">udp</span> {
+    <span class="n">udp</span>(<span class="n">ip</span>(<span class="s2">"192.168.0.92"</span>) <span class="n">port</span>(<span class="m">7071</span>));
+};
+
+<span class="n">destination</span> <span class="n">d_mlal</span> { <span class="n">usertty</span>(<span class="s2">"*"</span>); };
+<span class="n">destination</span> <span class="n">hyoeun_info</span> { <span class="n">file</span>(<span class="s2">"/var/log/hyoeun_log/${YEAR}_${MONTH}_${DAY}_info"</span>); };
+
+<span class="n">filter</span> <span class="n">f_kernel</span>     { <span class="n">facility</span>(<span class="n">kern</span>); };
+<span class="n">filter</span> <span class="n">f_default</span>    { <span class="n">level</span>(<span class="n">info</span>..<span class="n">emerg</span>) <span class="n">and</span>
+                        <span class="n">not</span> (<span class="n">facility</span>(<span class="n">mail</span>)
+                        <span class="n">or</span> <span class="n">facility</span>(<span class="n">authpriv</span>)
+                        <span class="n">or</span> <span class="n">facility</span>(<span class="n">cron</span>)); };
+<span class="n">filter</span> <span class="n">f_emergency</span>  { <span class="n">level</span>(<span class="n">emerg</span>); };
+<span class="n">filter</span> <span class="n">f_news</span>       { <span class="n">facility</span>(<span class="n">uucp</span>) <span class="n">or</span>
+                        (<span class="n">facility</span>(<span class="n">news</span>)
+                        <span class="n">and</span> <span class="n">level</span>(<span class="n">crit</span>..<span class="n">emerg</span>)); };
+
+<span class="n">log</span> { <span class="n">source</span>(<span class="n">s_sys</span>); <span class="n">destination</span>(<span class="n">d_mlal</span>); };
+<span class="n">log</span> { <span class="n">source</span>(<span class="n">udp</span>); <span class="n">filter</span>(<span class="n">f_default</span>); <span class="n">filter</span>(<span class="n">f_news</span>); <span class="n">destination</span>(<span class="n">hyoeun_info</span>); };
+<span class="n">log</span> {
+    <span class="n">source</span>(<span class="n">udp</span>);
+    <span class="n">filter</span>(<span class="n">f_default</span>);
+    <span class="n">filter</span> {
+        <span class="n">match</span>(<span class="s2">"^((?!Hello).)*$"</span>,<span class="n">value</span>(<span class="s2">"MSG"</span>));
+        <span class="n">match</span>(<span class="s2">"Program\.exe"</span>,<span class="n">value</span>(<span class="s2">"MSG"</span>));
+        <span class="n">match</span>(<span class="s2">"Ann"</span>,<span class="n">value</span>(<span class="s2">"MSGHDR"</span>));
+    };
+    <span class="n">destination</span> {
+        <span class="n">file</span>(<span class="s2">"/var/log/hyoeun/Program_${YEAR}_${MONTH}_${DAY}_${HOUR}_$(/ ${MIN} 10)0.log"</span> <span class="n">template</span>(<span class="n">template_date_format</span>));
+    };
+};
+
+@<span class="n">include</span> <span class="s2">"/etc/syslog-ng/conf.d/*.conf"</span>
+
+</code></pre></div></div>
+<p><br /></p>
+
+<h2 id="실행-확인">실행 확인</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ netstat -nltup
+</code></pre></div></div>
+<p>위의 명령어를 치면 현재 작동하고 있는 syslog-ng의 상황을 볼 수 있다.</p>
+
+<h2 id="더-자세히-알아보기">더 자세히 알아보기</h2>
+
+<h3 id="source"><a href="https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.16/administration-guide/16#TOPIC-956446">Source</a></h3>
+<ul>
+  <li>pipe: 지정된 파이프 이름을 오픈하여 로그 메시지를 읽음</li>
+  <li>internal: syslog-ng 내부에서 생성되는 메시지를 수집</li>
+  <li>system:</li>
+  <li>unix-stream: SOCK_STREAM 모드로 지정된 UNIX 소켓을 열고 로그 메시지를 수신(Linux의 경우)
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="n">src</span> {
+  <span class="n">pipe</span> (<span class="s2">"/proc/kmsg"</span> <span class="n">log_prefix</span>(<span class="s2">"kernel:"</span>));
+  <span class="n">unix</span>-<span class="n">stream</span> (<span class="s2">"&lt;path-to-socket&gt;"</span>  <span class="n">max</span>-<span class="n">connections</span>(<span class="m">10</span>) <span class="n">group</span>(<span class="n">log</span>));
+  <span class="n">system</span>();
+  <span class="n">internal</span>();
+};
+</code></pre></div>    </div>
+  </li>
+  <li>unix-dgram: SOCK_DGRAM 모드로 지정된 UNIX 소켓을 열고 로그 메시지를 수신(BSD 계열 UNIX)</li>
+  <li>file: 지정된 파일을 열고 메시지를 읽음
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="n">s_file</span> { 
+  <span class="n">file</span>(<span class="s2">"/var/log/messages_${HOST}"</span>); <span class="c">#HOST라는 매크로를 사용 하고 싶을 때.
+</span>};
+</code></pre></div>    </div>
+  </li>
+  <li>udp: UDP 포트로 대기 로그 메시지를 수신
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="n">s_file</span> { 
+  <span class="n">udp</span>(<span class="n">ip</span>(<span class="s2">"192.168.0.92"</span>) <span class="n">port</span>(<span class="m">514</span>));
+};
+</code></pre></div>    </div>
+  </li>
+  <li>tcp: TCP 포트로 대기 로그 메시지를 수신
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="n">tcpgateway</span> {
+  <span class="n">unix</span>-<span class="n">stream</span>(<span class="s2">"/dev/log"</span>);
+  <span class="n">internal</span>();
+  <span class="n">tcp</span>(<span class="n">ip</span>(<span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>) <span class="n">port</span>(<span class="m">514</span>) <span class="n">max_connections</span>(<span class="m">1000</span>));
+};
+</code></pre></div>    </div>
+  </li>
+  <li>network: udp,tcp는 obsolete이기 때문에 안 쓰고 network로 대체하는 것이 좋다.
+    <ul>
+      <li>TLS를 쓰는 경우에는 transport에 “tls”, TCP는 “tcp”, UDP는 “udp”로 대체해서 쓴다.</li>
+      <li>IPv6의 경우에는 ip-protocol(6)를 추가한다.
+        <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="n">s_new_network_tcp</span> {
+<span class="n">network</span>(
+    <span class="n">transport</span>(<span class="s2">"tls"</span>)
+    <span class="n">ip</span>(<span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>) <span class="n">port</span>(<span class="m">1999</span>)
+    <span class="n">tls</span>(
+        <span class="n">peer</span>-<span class="n">verify</span>(<span class="s2">"required-trusted"</span>)
+        <span class="n">key</span>-<span class="n">file</span>(<span class="s2">"/opt/syslog-ng/etc/syslog-ng/syslog-ng.key"</span>)
+        <span class="n">cert</span>-<span class="n">file</span>(<span class="s1">'/opt/syslog-ng/etc/syslog-ng/syslog-ng.crt'</span>)
+    )
+);
+};
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>sun-stream: 지정된 STREAM 장치를 열고 수신(Solaris)</li>
+  <li>wildcard-file(): 여러파일에서 메시지를 수집
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="n">s_file</span> { 
+  <span class="n">wildcard</span>-<span class="n">file</span>(
+      <span class="n">base</span>-<span class="n">dir</span>(<span class="s2">"&lt;pathname&gt;"</span>)
+     <span class="n">filename</span>-<span class="n">pattern</span>(<span class="s2">"&lt;filename&gt;"</span>)
+  ); 
+};
+</code></pre></div>    </div>
+  </li>
+  <li>syslog: syslog로부터 로그를 수집
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="n">s_network</span> {
+  <span class="n">syslog</span>(<span class="n">ip</span>(<span class="m">10</span>.<span class="m">1</span>.<span class="m">2</span>.<span class="m">3</span>) <span class="n">transport</span>(<span class="s2">"udp"</span>));
+};
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="filter"><a href="https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.16/administration-guide/51#TOPIC-956579">Filter</a></h3>
+<ul>
+  <li>log 문에 여러 개의 filter 문이 포함되어있는 경우 syslog-ng는 모든 필터가 true 인 경우에만 로그를 저장합니다.
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filter</span> <span class="n">demo_filter1</span> { <span class="n">host</span>(<span class="s2">"example1"</span>); };
+<span class="n">filter</span> <span class="n">demo_filter2</span> { <span class="n">host</span>(<span class="s2">"example2"</span>); };
+<span class="n">log</span> {
+  <span class="n">source</span>(<span class="n">s1</span>); <span class="n">source</span>(<span class="n">s2</span>);
+  <span class="n">filter</span>(<span class="n">demo_filter1</span>); <span class="n">filter</span>(<span class="n">demo_filter2</span>);
+  <span class="n">destination</span>(<span class="n">d1</span>); <span class="n">destination</span>(<span class="n">d2</span>); };
+</code></pre></div>    </div>
+    <p>host는 동시에 2개 일 수 없기에 위와 같은 코드는 로그 수집이 불가하고 따라서 아래와 같이 수정해야합니다.</p>
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filter</span> <span class="n">demo_filter</span> { <span class="n">host</span>(<span class="s2">"example1"</span>) <span class="n">or</span> <span class="n">host</span>(<span class="s2">"example2"</span>); };
+<span class="n">log</span> {
+  <span class="n">source</span>(<span class="n">s1</span>); <span class="n">source</span>(<span class="n">s2</span>);
+  <span class="n">filter</span>(<span class="n">demo_filter</span>);
+  <span class="n">destination</span>(<span class="n">d1</span>); <span class="n">destination</span>(<span class="n">d2</span>); };
+</code></pre></div>    </div>
+  </li>
+  <li>match: 정규식에 해당하는 메시지를 선택해서 필터링.
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filter</span> <span class="n">match_filter</span> {
+ <span class="n">match</span>(<span class="s2">"regex expre"</span>, <span class="n">value</span>(<span class="s2">"MSGHDR"</span>)); <span class="c">#value는 ${MESSAGE} MACRO로 받아지는 부분으로 scope를 좁혀주는 역할을 한다.
+</span> <span class="n">match</span>(<span class="s2">"regex expre"</span>, <span class="n">value</span>(<span class="s2">"MSG"</span>)); <span class="c">#value 옵션 안에 $ sign을 포함하지 말고 MACRO를 그냥 넣는다.
+</span>};
+</code></pre></div>    </div>
+  </li>
+  <li>message: match에서 메시지 부분만(헤더부분 제외) 필터링.
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filter</span> <span class="n">message_filter</span> {
+ <span class="n">message</span>(<span class="s2">"regexp"</span>);
+};
+</code></pre></div>    </div>
+  </li>
+  <li>level: emerge, alert, crit, err, warning, notice, info, debug 구분으로 필터링.
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filter</span> <span class="n">level_filter</span> {
+ <span class="n">level</span>(<span class="n">warning</span>);
+ <span class="n">level</span>(<span class="n">err</span>..<span class="n">emerg</span>); <span class="c">#..으로 범위 지정이 가능합니다.
+</span>};
+</code></pre></div>    </div>
+  </li>
+  <li>netmask: 특정 IP에서 온 host message만 필터링.
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filter</span> <span class="n">ip_filter</span> {
+ <span class="n">netmask</span>(<span class="m">192</span>.<span class="m">168</span>.<span class="m">0</span>.<span class="m">151</span>/<span class="m">255</span>.<span class="m">255</span>.<span class="m">255</span>.<span class="m">0</span>); <span class="c">#255.255.255.0 대신에 24로 입력할 수도 있다. IPv6인 경우 netmask6()를 사용하면 된다.
+</span>};
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>facility: name, code와도 되는건데 아래의 코드를 사용한다.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align: center">Numberical Code</th>
+          <th style="text-align: center">Facility Name</th>
+          <th style="text-align: center">Facility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align: center">0</td>
+          <td style="text-align: center">kern</td>
+          <td style="text-align: center">kernel messages</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">1</td>
+          <td style="text-align: center">user</td>
+          <td style="text-align: center">user-level messages</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">2</td>
+          <td style="text-align: center">mail</td>
+          <td style="text-align: center">mail system</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">3</td>
+          <td style="text-align: center">daemon</td>
+          <td style="text-align: center">system daemons</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">4</td>
+          <td style="text-align: center">auth</td>
+          <td style="text-align: center">security/authorization messages</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">5</td>
+          <td style="text-align: center">syslog</td>
+          <td style="text-align: center">messages generated internally by syslogd</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">6</td>
+          <td style="text-align: center">lpr</td>
+          <td style="text-align: center">line printer subsystem</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">7</td>
+          <td style="text-align: center">news</td>
+          <td style="text-align: center">network news subsystem</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">8</td>
+          <td style="text-align: center">uucp</td>
+          <td style="text-align: center">UUCP subsystem</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">9</td>
+          <td style="text-align: center">cron</td>
+          <td style="text-align: center">clock daemon</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">10</td>
+          <td style="text-align: center">authpriv</td>
+          <td style="text-align: center">security/authorization messages</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">11</td>
+          <td style="text-align: center">ftp</td>
+          <td style="text-align: center">FTP daemon</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">12</td>
+          <td style="text-align: center">ntp</td>
+          <td style="text-align: center">NTP subsystem</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">13</td>
+          <td style="text-align: center">security</td>
+          <td style="text-align: center">log audit</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">14</td>
+          <td style="text-align: center">console</td>
+          <td style="text-align: center">log alert</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">15</td>
+          <td style="text-align: center">solaris-cron</td>
+          <td style="text-align: center">clock daemon</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">16-23</td>
+          <td style="text-align: center">local0..local7</td>
+          <td style="text-align: center">locally used facilities (local0-local7)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">filter</span> <span class="n">f_local1</span> {
+      <span class="n">facility</span>(<span class="n">local1</span>); 
+  };
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="destination"><a href="https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.16/administration-guide/27#TOPIC-956486">Destination</a></h3>
+
+<ul>
+  <li>file: macros를 이용해 파일 이름을 만들어 저장 할 수 있다. create-dirs() setting을 통해 폴더가 존재하지 않아도 만들 수 있다.
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">destination</span> <span class="n">d_file</span> {
+  <span class="n">file</span>(<span class="s2">"/var/log/${YEAR}.${MONTH}.${DAY}/messages"</span>
+      <span class="n">template</span>(<span class="s2">"${HOUR}:${MIN}:${SEC} ${TZ} ${HOST} [${LEVEL}] ${MESSAGE}\n"</span>)
+      <span class="n">template</span>-<span class="n">escape</span>(<span class="n">no</span>)
+      <span class="n">owner</span>(<span class="s2">"root"</span>)
+      <span class="n">group</span>(<span class="s2">"root"</span>)
+      <span class="n">perm</span>(<span class="m">0777</span>)
+      );
+};
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="options"><a href="https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.16/administration-guide/54#TOPIC-956589">Options</a></h3>
+<ul>
+  <li>option 이름들, parameter들은 -이나 _를 동일하게 인식한다. ex) max-connections(10) == max_connections(10)</li>
+  <li>create-dirs (no): yes, no(default)만 올 수 있고 destination files들을 위해 driectory를 만들수 있게 할 것인지 아닌지를 설정.</li>
+  <li>dns-cache-expire(3600): 캐쉬를 언제까지 볼 수 있게 할 것인지 보는 시간 설정(초단위).</li>
+  <li>dns-cache (yes): yes(default), no. Dns cache usage를 enable할건지 disable할건지 설정.</li>
+  <li>flush-lines(100): destination에 얼마나 많은 lines을 flushed할 것인지 설정.</li>
+</ul>
+
+<h3 id="elasticsearch">elasticsearch</h3>
+<ul>
+  <li>Linux에만 사용이 되고 많은 memory를 사용한다.</li>
+</ul>
+
+<h3 id="macro">Macro</h3>
+<ul>
+  <li>HOUR12: 01, 02</li>
+  <li>AMPM: AM, PM</li>
+  <li>DATE: Apr 22 09:44:29</li>
+  <li>ISODATE: 2006-06-13T15:58:00.123+01:00</li>
+  <li>YEAR: 2019</li>
+  <li>MONTH: 04</li>
+  <li>WEEK_DAY: 3 (화요일 의미 1-7까지 있다.)</li>
+  <li>WEEKDAY: Thu</li>
+  <li>DAY: 23</li>
+  <li>MIN: 1</li>
+</ul>
+
+<h3 id="나누기">나누기</h3>
+<ul>
+  <li>$(/ X Y)는 X를 Y로 나눈 값을 나타낸다.</li>
+  <li>$(if (“${MIN}” &lt; 5) “0” “$(if (“${MIN}” &lt; 10) “1” “…”)”) 이런 식으로 5분 단위의 rotation을 만들 수 있다.</li>
+</ul>
+
+<h3 id="기타-정보">기타 정보</h3>
+<ul>
+  <li>option 혹은 parameter들 사이에서 ,는 무시될 수 있다.
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="n">s_demo_stream</span> {
+  <span class="n">unix</span>-<span class="n">stream</span>(<span class="s2">"&lt;path-to-socket&gt;"</span> <span class="n">max</span>-<span class="n">connections</span>(<span class="m">10</span>) <span class="n">group</span>(<span class="n">log</span>));
+};
+<span class="n">source</span> <span class="n">s_demo_stream</span> {
+  <span class="n">unix</span>-<span class="n">stream</span>(<span class="s2">"&lt;path-to-socket&gt;"</span>, <span class="n">max</span>-<span class="n">connections</span>(<span class="m">10</span>), <span class="n">group</span>(<span class="n">log</span>));
+};
+</code></pre></div>    </div>
+  </li>
+  <li>identifier에 ““로 선언하면 안에 스페이스도 허용 가능하다.
+    <div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="s2">"s demo stream"</span> {
+  <span class="n">unix</span>-<span class="n">stream</span>(<span class="s2">"&lt;path-to-socket&gt;"</span> <span class="n">max</span>-<span class="n">connections</span>(<span class="m">10</span>) <span class="n">group</span>(<span class="n">log</span>));
+};
+</code></pre></div>    </div>
+  </li>
+</ul>
+</div><section class="article__sharing d-print-none"></section><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2019-05-12T00:00:00+09:00"><!-- start custom article footer snippet -->
+
+<!-- end custom article footer snippet --><div class="article__subscribe"><div class="subscribe"><i class="fas fa-rss"></i> <a type="application/rss+xml" href="/feed.xml">Subscribe</a></div></div><div class="article__license"><div class="license">
+    <p>This work is licensed under a <a itemprop="license" rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">Attribution-NonCommercial 4.0 International</a> license.
+      <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">
+        <img alt="Attribution-NonCommercial 4.0 International" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+      </a>
+    </p>
+  </div></div></footer><div class="article__section-navigator clearfix"><div class="previous"><span>PREVIOUS</span><a href="/2019/03/04/cs_release.html">c# 리눅스 배포 및 데몬 등록법</a></div><div class="next"><span>NEXT</span><a href="/2019/05/13/syslog-ng_advanced.html">Syslog-Ng 심화 사용</a></div></div></div>
+
+</div>
+
+<script>(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    $(function() {
+      var $this ,$scroll;
+      var $articleContent = $('.js-article-content');
+      var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+      var scroll = hasSidebar ? '.js-page-main' : 'html, body';
+      $scroll = $(scroll);
+
+      $articleContent.find('.highlight').each(function() {
+        $this = $(this);
+        $this.attr('data-lang', $this.find('code').attr('data-lang'));
+      });
+      $articleContent.find('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').each(function() {
+        $this = $(this);
+        $this.append($('<a class="anchor d-print-none" aria-hidden="true"></a>').html('<i class="fas fa-anchor"></i>'));
+      });
+      $articleContent.on('click', '.anchor', function() {
+        $scroll.scrollToAnchor('#' + $(this).parent().attr('id'), 400);
+      });
+    });
+  });
+})();
+</script></div><section class="page__comments d-print-none"></section></article><!-- start custom main bottom snippet -->
+
+<!-- end custom main bottom snippet --></div>
+            </div></div></div><div class="page__footer d-print-none">
+<footer class="footer py-4 js-page-footer">
+  <div class="main"><div itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hyo-Eun Choi"><meta itemprop="url" content="/adonaiohesed.github.io"><meta itemprop="description" content="Developer who manage security."><div class="footer__author-links"><div class="author-links">
+  <ul class="menu menu--nowrap menu--inline"><link itemprop="url" href="adonaiohesed.github.io"><li title="Send me an Email.">
+      <a class="button button--circle mail-button" itemprop="email" href="mailto:hchoi53@gmail.com" target="_blank">
+        <i class="fas fa-envelope"></i>
+      </a><li title="Follow me on Linkedin.">
+        <a class="button button--circle linkedin-button" itemprop="sameAs" href="https://www.linkedin.com/in/hyoeun-choi" target="_blank">
+          <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M260.096 155.648c0 27.307008-9.899008 50.516992-29.696 69.632-19.796992 19.115008-45.396992 28.672-76.8 28.672-30.036992 0-54.612992-9.556992-73.728-28.672-19.115008-19.115008-28.672-42.324992-28.672-69.632 0-28.672 9.556992-52.224 28.672-70.656 19.115008-18.432 44.372992-27.648 75.776-27.648 31.403008 0 56.32 9.216 74.752 27.648 18.432 18.432 28.331008 41.984 29.696 70.656 0 0 0 0 0 0m-202.752 808.96c0 0 0-632.832 0-632.832 0 0 196.608 0 196.608 0 0 0 0 632.832 0 632.832 0 0-196.608 0-196.608 0 0 0 0 0 0 0m313.344-430.08c0-58.708992-1.364992-126.292992-4.096-202.752 0 0 169.984 0 169.984 0 0 0 10.24 88.064 10.24 88.064 0 0 4.096 0 4.096 0 40.96-68.267008 105.812992-102.4 194.56-102.4 68.267008 0 123.220992 22.868992 164.864 68.608 41.643008 45.739008 62.464 113.664 62.464 203.776 0 0 0 374.784 0 374.784 0 0-196.608 0-196.608 0 0 0 0-350.208 0-350.208 0-91.476992-33.451008-137.216-100.352-137.216-47.787008 0-81.236992 24.576-100.352 73.728-4.096 8.192-6.144 24.576-6.144 49.152 0 0 0 364.544 0 364.544 0 0-198.656 0-198.656 0 0 0 0-430.08 0-430.08 0 0 0 0 0 0" />
+</svg></div>
+        </a>
+      </li><li title="Follow me on Github.">
+        <a class="button button--circle github-button" itemprop="sameAs" href="https://github.com/adonaiohesed" target="_blank">
+          <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path class="svgpath" data-index="path_0" fill="#272636" d="M0 525.2c0 223.6 143.3 413.7 343 483.5 26.9 6.8 22.8-12.4 22.8-25.4l0-88.7c-155.3 18.2-161.5-84.6-172-101.7-21.1-36-70.8-45.2-56-62.3 35.4-18.2 71.4 4.6 113.1 66.3 30.2 44.7 89.1 37.2 119 29.7 6.5-26.9 20.5-50.9 39.7-69.6C248.8 728.2 181.7 630 181.7 513.2c0-56.6 18.7-108.7 55.3-150.7-23.3-69.3 2.2-128.5 5.6-137.3 66.5-6 135.5 47.6 140.9 51.8 37.8-10.2 80.9-15.6 129.1-15.6 48.5 0 91.8 5.6 129.8 15.9 12.9-9.8 77-55.8 138.8-50.2 3.3 8.8 28.2 66.7 6.3 135 37.1 42.1 56 94.6 56 151.4 0 117-67.5 215.3-228.8 243.7 26.9 26.6 43.6 63.4 43.6 104.2l0 128.8c0.9 10.3 0 20.5 17.2 20.5C878.1 942.4 1024 750.9 1024 525.3c0-282.9-229.3-512-512-512C229.1 13.2 0 242.3 0 525.2L0 525.2z" />
+</svg>
+</div>
+        </a>
+      </li></ul>
+</div>
+</div>
+    </div><div class="site-info mt-2">
+      <div>© H.Choi 2019,
+        Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a super customizable Jekyll theme." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.
+      </div>
+    </div>
+  </div>
+</footer></div></div>
+    </div><script>(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $body = $('body'), $window = $(window);
+    var $pageRoot = $('.js-page-root'), $pageMain = $('.js-page-main');
+    var activeCount = 0;
+    function modal(options) {
+      var $root = this, visible, onChange, hideWhenWindowScroll = false;
+      var scrollTop;
+      function setOptions(options) {
+        var _options = options || {};
+        visible = _options.initialVisible === undefined ? false : show;
+        onChange = _options.onChange;
+        hideWhenWindowScroll = _options.hideWhenWindowScroll;
+      }
+      function init() {
+        setState(visible);
+      }
+      function setState(isShow) {
+        if (isShow === visible) {
+          return;
+        }
+        visible = isShow;
+        if (visible) {
+          activeCount++;
+          scrollTop = $(window).scrollTop() || $pageMain.scrollTop();
+          $root.addClass('modal--show');
+          $pageMain.scrollTop(scrollTop);
+          activeCount === 1 && ($pageRoot.addClass('show-modal'), $body.addClass('of-hidden'));
+          hideWhenWindowScroll && window.hasEvent('touchstart') && $window.on('scroll', hide);
+          $window.on('keyup', handleKeyup);
+        } else {
+          activeCount > 0 && activeCount--;
+          $root.removeClass('modal--show');
+          $window.scrollTop(scrollTop);
+          activeCount === 0 && ($pageRoot.removeClass('show-modal'), $body.removeClass('of-hidden'));
+          hideWhenWindowScroll && window.hasEvent('touchstart') && $window.off('scroll', hide);
+          $window.off('keyup', handleKeyup);
+        }
+        onChange && onChange(visible);
+      }
+      function show() {
+        setState(true);
+      }
+      function hide() {
+        setState(false);
+      }
+      function handleKeyup(e) {
+        // Char Code: 27  ESC
+        if (e.which ===  27) {
+          hide();
+        }
+      }
+      setOptions(options);
+      init();
+      return {
+        show: show,
+        hide: hide,
+        $el: $root
+      };
+    }
+    $.fn.modal = modal;
+  });
+})();
+</script><div class="modal modal--overflow page__search-modal d-print-none js-page-search-modal"><script>
+(function () {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    // search panel
+    var search = (window.search || (window.search = {}));
+    var useDefaultSearchBox = window.useDefaultSearchBox === undefined ?
+      true : window.useDefaultSearchBox ;
+
+    var $searchModal = $('.js-page-search-modal');
+    var $searchToggle = $('.js-search-toggle');
+    var searchModal = $searchModal.modal({ onChange: handleModalChange, hideWhenWindowScroll: true });
+    var modalVisible = false;
+    search.searchModal = searchModal;
+
+    var $searchBox = null;
+    var $searchInput = null;
+    var $searchClear = null;
+
+    function getModalVisible() {
+      return modalVisible;
+    }
+    search.getModalVisible = getModalVisible;
+
+    function handleModalChange(visible) {
+      modalVisible = visible;
+      if (visible) {
+        search.onShow && search.onShow();
+        useDefaultSearchBox && $searchInput[0] && $searchInput[0].focus();
+      } else {
+        search.onShow && search.onHide();
+        useDefaultSearchBox && $searchInput[0] && $searchInput[0].blur();
+        setTimeout(function() {
+          useDefaultSearchBox && ($searchInput.val(''), $searchBox.removeClass('not-empty'));
+          search.clear && search.clear();
+          window.pageAsideAffix && window.pageAsideAffix.refresh();
+        }, 400);
+      }
+    }
+
+    $searchToggle.on('click', function() {
+      modalVisible ? searchModal.hide() : searchModal.show();
+    });
+    // Char Code: 83  S, 191 /
+    $(window).on('keyup', function(e) {
+      if (!modalVisible && !window.isFormElement(e.target || e.srcElement) && (e.which === 83 || e.which === 191)) {
+        modalVisible || searchModal.show();
+      }
+    });
+
+    if (useDefaultSearchBox) {
+      $searchBox = $('.js-search-box');
+      $searchInput = $searchBox.children('input');
+      $searchClear = $searchBox.children('.js-icon-clear');
+      search.getSearchInput = function() {
+        return $searchInput.get(0);
+      };
+      search.getVal = function() {
+        return $searchInput.val();
+      };
+      search.setVal = function(val) {
+        $searchInput.val(val);
+      };
+
+      $searchInput.on('focus', function() {
+        $(this).addClass('focus');
+      });
+      $searchInput.on('blur', function() {
+        $(this).removeClass('focus');
+      });
+      $searchInput.on('input', window.throttle(function() {
+        var val = $(this).val();
+        if (val === '' || typeof val !== 'string') {
+          search.clear && search.clear();
+        } else {
+          $searchBox.addClass('not-empty');
+          search.onInputNotEmpty && search.onInputNotEmpty(val);
+        }
+      }, 400));
+      $searchClear.on('click', function() {
+        $searchInput.val(''); $searchBox.removeClass('not-empty');
+        search.clear && search.clear();
+      });
+    }
+  });
+})();
+</script><div class="search search--dark">
+  <div class="main">
+    <div class="search__header">Search</div>
+    <div class="search-bar">
+      <div class="search-box js-search-box">
+        <div class="search-box__icon-search"><i class="fas fa-search"></i></div>
+        <input type="text" />
+        <div class="search-box__icon-clear js-icon-clear">
+          <a><i class="fas fa-times"></i></a>
+        </div>
+      </div>
+      <button class="button button--theme-dark button--pill search__cancel js-search-toggle">
+        Cancel</button>
+    </div>
+    <div class="search-result js-search-result"></div>
+  </div>
+</div>
+<script>var SOURCES = window.TEXT_VARIABLES.sources;
+var PAHTS = window.TEXT_VARIABLES.paths;
+window.Lazyload.js([SOURCES.jquery, PAHTS.search_js], function() {
+  var search = (window.search || (window.search = {}));
+  var searchData = window.TEXT_SEARCH_DATA ? initData(window.TEXT_SEARCH_DATA) : {};
+
+  function memorize(f) {
+    var cache = {};
+    return function () {
+      var key = Array.prototype.join.call(arguments, ',');
+      if (key in cache) return cache[key];
+      else return cache[key] = f.apply(this, arguments);
+    };
+  }
+
+  function initData(data) {
+    var _data = [], i, j, key, keys, cur;
+    keys = Object.keys(data);
+    for (i = 0; i < keys.length; i++) {
+      key = keys[i], _data[key] = [];
+      for (j = 0; j < data[key].length; j++) {
+        cur = data[key][j];
+        cur.title = window.decodeUrl(cur.title);
+        cur.url = window.decodeUrl(cur.url);
+        _data[key].push(cur);
+      }
+    }
+    return _data;
+  }
+
+  /// search
+  function searchByQuery(query) {
+    var i, j, key, keys, cur, _title, result = {};
+    keys = Object.keys(searchData);
+    for (i = 0; i < keys.length; i++) {
+      key = keys[i];
+      for (j = 0; j < searchData[key].length; j++) {
+        cur = searchData[key][j], _title = cur.title;
+        if ((result[key] === undefined || result[key] && result[key].length < 4 )
+          && _title.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+          if (result[key] === undefined) {
+            result[key] = [];
+          }
+          result[key].push(cur);
+        }
+      }
+    }
+    return result;
+  }
+
+  var renderHeader = memorize(function(header) {
+    return $('<p class="search-result__header">' + header + '</p>');
+  });
+
+  var renderItem = function(index, title, url) {
+    return $('<li class="search-result__item" data-index="' + index + '"><a class="button" href="' + url + '">' + title + '</a></li>');
+  };
+
+  function render(data) {
+    if (!data) { return null; }
+    var $root = $('<ul></ul>'), i, j, key, keys, cur, itemIndex = 0;
+    keys = Object.keys(data);
+    for (i = 0; i < keys.length; i++) {
+      key = keys[i];
+      $root.append(renderHeader(key));
+      for (j = 0; j < data[key].length; j++) {
+        cur = data[key][j];
+        $root.append(renderItem(itemIndex++, cur.title, cur.url));
+      }
+    }
+    return $root;
+  }
+
+  // search box
+  var $result = $('.js-search-result'), $resultItems;
+  var lastActiveIndex, activeIndex;
+
+  function clear() {
+    $result.html(null);
+    $resultItems = $('.search-result__item'); activeIndex = 0;
+  }
+  function onInputNotEmpty(val) {
+    $result.html(render(searchByQuery(val)));
+    $resultItems = $('.search-result__item'); activeIndex = 0;
+    $resultItems.eq(0).addClass('active');
+  }
+
+  search.clear = clear;
+  search.onInputNotEmpty = onInputNotEmpty;
+
+  function updateResultItems() {
+    lastActiveIndex >= 0 && $resultItems.eq(lastActiveIndex).removeClass('active');
+    activeIndex >= 0 && $resultItems.eq(activeIndex).addClass('active');
+  }
+
+  function moveActiveIndex(direction) {
+    var itemsCount = $resultItems ? $resultItems.length : 0;
+    if (itemsCount > 1) {
+      lastActiveIndex = activeIndex;
+      if (direction === 'up') {
+        activeIndex = (activeIndex - 1 + itemsCount) % itemsCount;
+      } else if (direction === 'down') {
+        activeIndex = (activeIndex + 1 + itemsCount) % itemsCount;
+      }
+      updateResultItems();
+    }
+  }
+
+  // Char Code: 13  Enter, 37  ⬅, 38  ⬆, 39  ➡, 40  ⬇
+  $(window).on('keyup', function(e) {
+    var modalVisible = search.getModalVisible && search.getModalVisible();
+    if (modalVisible) {
+      if (e.which === 38) {
+        modalVisible && moveActiveIndex('up');
+      } else if (e.which === 40) {
+        modalVisible && moveActiveIndex('down');
+      } else if (e.which === 13) {
+        modalVisible && $resultItems && activeIndex >= 0 && $resultItems.eq(activeIndex).children('a')[0].click();
+      }
+    }
+  });
+
+  $result.on('mouseover', '.search-result__item > a', function() {
+    var itemIndex = $(this).parent().data('index');
+    itemIndex >= 0 && (lastActiveIndex = activeIndex, activeIndex = itemIndex, updateResultItems());
+  });
+});
+</script></div></div>
+
+<script>(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    function scrollToAnchor(anchor, duration, callback) {
+      var $root = this;
+      $root.animate({ scrollTop: $(anchor).position().top }, duration, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+    $.fn.scrollToAnchor = scrollToAnchor;
+  });
+})();
+(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    function affix(options) {
+      var $root = this, $window = $(window), $scrollTarget, $scroll,
+        offsetBottom = 0, scrollTarget = window, scroll = window.document, disabled = false, isOverallScroller = true,
+        rootTop, rootLeft, rootHeight, scrollBottom, rootBottomTop,
+        hasInit = false, curState;
+
+      function setOptions(options) {
+        var _options = options || {};
+        _options.offsetBottom && (offsetBottom = _options.offsetBottom);
+        _options.scrollTarget && (scrollTarget = _options.scrollTarget);
+        _options.scroll && (scroll = _options.scroll);
+        _options.disabled !== undefined && (disabled = _options.disabled);
+        $scrollTarget = $(scrollTarget);
+        isOverallScroller = window.isOverallScroller($scrollTarget[0]);
+        $scroll = $(scroll);
+      }
+      function preCalc() {
+        top();
+        rootHeight = $root.outerHeight();
+        rootTop = $root.offset().top + (isOverallScroller ? 0 :  $scrollTarget.scrollTop());
+        rootLeft = $root.offset().left;
+      }
+      function calc(needPreCalc) {
+        needPreCalc && preCalc();
+        scrollBottom = $scroll.outerHeight() - offsetBottom - rootHeight;
+        rootBottomTop = scrollBottom - rootTop;
+      }
+      function top() {
+        if (curState !== 'top') {
+          $root.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+          curState = 'top';
+        }
+      }
+      function fixed() {
+        if (curState !== 'fixed') {
+          $root.addClass('fixed').css({
+            left: rootLeft + 'px',
+            top: 0
+          });
+          curState = 'fixed';
+        }
+      }
+      function bottom() {
+        if (curState !== 'bottom') {
+          $root.removeClass('fixed').css({
+            left: 0,
+            top: rootBottomTop + 'px'
+          });
+          curState = 'bottom';
+        }
+      }
+      function setState() {
+        var scrollTop = $scrollTarget.scrollTop();
+        if (scrollTop >= rootTop && scrollTop <= scrollBottom) {
+          fixed();
+        } else if (scrollTop < rootTop) {
+          top();
+        } else {
+          bottom();
+        }
+      }
+      function init() {
+        if(!hasInit) {
+          var interval, timeout;
+          calc(true); setState();
+          // run calc every 100 millisecond
+          interval = setInterval(function() {
+            calc();
+          }, 100);
+          timeout = setTimeout(function() {
+            clearInterval(interval);
+          }, 45000);
+          window.pageLoad.then(function() {
+            setTimeout(function() {
+              clearInterval(interval);
+              clearTimeout(timeout);
+            }, 3000);
+          });
+          $scrollTarget.on('scroll', function() {
+            disabled || setState();
+          });
+          $window.on('resize', function() {
+            disabled || (calc(true), setState());
+          });
+          hasInit = true;
+        }
+      }
+
+      setOptions(options);
+      if (!disabled) {
+        init();
+      }
+      $window.on('resize', window.throttle(function() {
+        init();
+      }, 200));
+      return {
+        setOptions: setOptions,
+        refresh: function() {
+          calc(true, { animation: false }); setState();
+        }
+      };
+    }
+    $.fn.affix = affix;
+  });
+})();
+(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    function toc(options) {
+      var $root = this, $window = $(window), $scrollTarget, $scroller, $tocUl = $('<ul class="toc toc--ellipsis"></ul>'), $tocLi, $headings, $activeLast, $activeCur,
+        selectors = 'h1,h2,h3', container = 'body', scrollTarget = window, scroller = 'html, body', disabled = false,
+        headingsPos, scrolling = false, hasRendered = false, hasInit = false;
+
+      function setOptions(options) {
+        var _options = options || {};
+        _options.selectors && (selectors = _options.selectors);
+        _options.container && (container = _options.container);
+        _options.scrollTarget && (scrollTarget = _options.scrollTarget);
+        _options.scroller && (scroller = _options.scroller);
+        _options.disabled !== undefined && (disabled = _options.disabled);
+        $headings = $(container).find(selectors).filter('[id]');
+        $scrollTarget = $(scrollTarget);
+        $scroller = $(scroller);
+      }
+      function calc() {
+        headingsPos = [];
+        $headings.each(function() {
+          headingsPos.push(Math.floor($(this).position().top));
+        });
+      }
+      function setState(element, disabled) {
+        var scrollTop = $scrollTarget.scrollTop(), i;
+        if (disabled || !headingsPos || headingsPos.length < 1) { return; }
+        if (element) {
+          $activeCur = element;
+        } else {
+          for (i = 0; i < headingsPos.length; i++) {
+            if (scrollTop >= headingsPos[i]) {
+              $activeCur = $tocLi.eq(i);
+            } else {
+              $activeCur || ($activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        $activeLast && $activeLast.removeClass('active');
+        ($activeLast = $activeCur).addClass('active');
+      }
+      function render() {
+        if(!hasRendered) {
+          $root.append($tocUl);
+          $headings.each(function() {
+            var $this = $(this);
+            $tocUl.append($('<li></li>').addClass('toc-' + $this.prop('tagName').toLowerCase())
+              .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+          });
+          $tocLi = $tocUl.children('li');
+          $tocUl.on('click', 'a', function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            scrolling = true;
+            setState($this.parent());
+            $scroller.scrollToAnchor($this.attr('href'), 400, function() {
+              scrolling = false;
+            });
+          });
+        }
+        hasRendered = true;
+      }
+      function init() {
+        var interval, timeout;
+        if(!hasInit) {
+          render(); calc(); setState(null, scrolling);
+          // run calc every 100 millisecond
+          interval = setInterval(function() {
+            calc();
+          }, 100);
+          timeout = setTimeout(function() {
+            clearInterval(interval);
+          }, 45000);
+          window.pageLoad.then(function() {
+            setTimeout(function() {
+              clearInterval(interval);
+              clearTimeout(timeout);
+            }, 3000);
+          });
+          $scrollTarget.on('scroll', function() {
+            disabled || setState(null, scrolling);
+          });
+          $window.on('resize', window.throttle(function() {
+            if (!disabled) {
+              render(); calc(); setState(null, scrolling);
+            }
+          }, 100));
+        }
+        hasInit = true;
+      }
+
+      setOptions(options);
+      if (!disabled) {
+        init();
+      }
+      $window.on('resize', window.throttle(function() {
+        init();
+      }, 200));
+      return {
+        setOptions: setOptions
+      };
+    }
+    $.fn.toc = toc;
+  });
+})();
+/*(function () {
+
+})();*/
+</script><script>
+  /* toc must before affix, since affix need to konw toc' height. */(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  var TOC_SELECTOR = window.TEXT_VARIABLES.site.toc.selectors;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $window = $(window);
+    var $articleContent = $('.js-article-content');
+    var $tocRoot = $('.js-toc-root'), $col2 = $('.js-col-aside');
+    var toc;
+    var tocDisabled = false;
+    var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+    var hasToc = $articleContent.find(TOC_SELECTOR).length > 0;
+
+    function disabled() {
+      return $col2.css('display') === 'none' || !hasToc;
+    }
+
+    tocDisabled = disabled();
+
+    toc = $tocRoot.toc({
+      selectors: TOC_SELECTOR,
+      container: $articleContent,
+      scrollTarget: hasSidebar ? '.js-page-main' : null,
+      scroller: hasSidebar ? '.js-page-main' : null,
+      disabled: tocDisabled
+    });
+
+    $window.on('resize', window.throttle(function() {
+      tocDisabled = disabled();
+      toc && toc.setOptions({
+        disabled: tocDisabled
+      });
+    }, 100));
+
+  });
+})();
+(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $window = $(window), $pageFooter = $('.js-page-footer');
+    var $pageAside = $('.js-page-aside');
+    var affix;
+    var tocDisabled = false;
+    var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+
+    affix = $pageAside.affix({
+      offsetBottom: $pageFooter.outerHeight(),
+      scrollTarget: hasSidebar ? '.js-page-main' : null,
+      scroller: hasSidebar ? '.js-page-main' : null,
+      scroll: hasSidebar ? $('.js-page-main').children() : null,
+      disabled: tocDisabled
+    });
+
+    $window.on('resize', window.throttle(function() {
+      affix && affix.setOptions({
+        disabled: tocDisabled
+      });
+    }, 100));
+
+    window.pageAsideAffix = affix;
+  });
+})();
+</script>
+    </div>
+    <script>(function () {
+  var $root = document.getElementsByClassName('root')[0];
+  if (window.hasEvent('touchstart')) {
+    $root.dataset.isTouch = true;
+    document.addEventListener('touchstart', function(){}, false);
+  }
+})();
+</script>
+  </body>
+</html>
