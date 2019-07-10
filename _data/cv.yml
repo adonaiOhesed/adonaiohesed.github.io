@@ -4,7 +4,7 @@ Hyo-Eun Choi:
         - "C, C++, OpenMP, MPI"
         - "Python, AWS EC2, AWS Lambda, AWS API Gateway, Django"
         - "Ionic3+, Angular, Firebase, Apache, Flaske"
-        - "C#, .NET Core, Elastic search, Kibana, Logstash, Syslog-ng, Node-js, Nginx, Search-guard"
+        - "C#, .NET Core, Elastic Search, Kibana, Logstash, Syslog-ng, Node-js, Nginx, Search-guard"
         - "IoT construction with ARTIK710, Nucleo, ARTIK cloud"
         - "Java, MySQL, Git, TFS, Firemon, Algosec, Docker"
     publications:
@@ -14,11 +14,11 @@ Hyo-Eun Choi:
           time:             "ACM. 2018."
     education:
         - time:             "2019 - current"
-          location:         "Johns Hokpins University"
+          location:         "Johns Hopkins University"
           description:      "MS in Information Security Institution"  
         - time:             "2010 - 2019&nbsp;&nbsp;&nbsp;&nbsp;"
           location:         "Handong Global University"
-          description:      "BS in Computer Science & Electironic Engineer"
+          description:      "BS in Computer Science & Electronic Engineer"
     employment:
         - time:             "2019.01 - 2019.06"
           location:         "Seoul"
@@ -33,7 +33,7 @@ Hyo-Eun Choi:
           company:          "Western Michigan University"
           position:         "Research Intern"
           responsibilities:
-            - "Be resopnsible for the experiment code and algorithum written in the paper"
+            - "Be responsible for the experiment code and algorithm are written in the paper"
             - "Efficient Parallel All-Pairs Shortest Paths Algorithm for Complex Graph Analysis, in International Conference on Parallel Processing (ICPP) Eugene, Oregon, USA, Aug. 2018"
     projects:
         - time:             "Jan 2019 - Jun 2019"
@@ -42,9 +42,9 @@ Hyo-Eun Choi:
           technologies:     "Elasticsearch Kibana Search-guard Syslog-ng .net core"
           responsibilities:
             - "Construct system infrastructure as a team leader and leading researcher"
-            - "After collecting various logs with syslog-ng, the logs are processed through .net core and then loaded into elasticsearch for visualizing with kibana"
+            - "After collecting various logs with syslog-ng, the logs are processed through .net core and then loaded into elastic search for visualizing with kibana"
             - "Development in-house visualization program which is monitoring of performance, error status, and health check using logs of in-house application"
-            - "Establishment of cluster, TLS and HTTPS security environment between nodes"
+            - "Establishment of a cluster, TLS and HTTPS security environment between nodes"
         - time:             "Aug 2017 - Sep 2018"
           team:             "Team of 3"
           title:            "Car & Taxi Sharing Service"
@@ -52,7 +52,7 @@ Hyo-Eun Choi:
           responsibilities:
             - "Leading project as main developer and team leader"
             - "It is for Handong Global University students and used by over 80% of students."
-            - "It runs on three different paltform which are web, android and ios."
+            - "It runs on three different platforms which are web, android, and ios."
             - "http://itaxi.handong.edu"
         - time:             "Jun 2016 - Aug 2017"
           team:             "Team of 10"
