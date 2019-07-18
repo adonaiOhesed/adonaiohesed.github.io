@@ -1,19 +1,25 @@
 ---
-title: 파이썬 설치 및 2.7 3.6 차이 설명
+title: 파이썬 설치 및 2.7 3.7 차이 설명
 tags: python
 key: page-python_install
 cover: /assets/cover/python.png
 ---
 
 ```console
-# yum install -y https://centos7.iuscommunity.org/ius-release.rpm
-# yum update
-# yum search python36
-# yum install -y python36u python36u-devel python36u-libs python36u-pip
-# rm -i /usr/bin/python 
-# ln -s /usr/bin/python3.6 /usr/bin/python
+# yum install gcc openssl-devel bzip2-devel libffi-devel
+# cd /usr/src
+# wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz
+# tar xzf Python-3.7.3.tgz
+# cd Python-3.7.3
+# ./configure --enable-optimizations
+# make altinstall
+# rm /usr/src/Python-3.7.3.tgz
+# python3.7 -V
 ```
+[설치 참고 사이트](https://tecadmin.net/install-python-3-7-on-centos/)
+<br>
+<br>
 
-* 위의 방법으로 할 시 yum 실행시 python2.4로 인지되었던게 사라져서 작동이 안 되니 5번째 명령어부터는 안 쓰는게 좋을 수 있다.
-
-[참고 사이트](https://pentestlab.tistory.com/57)
+* 2.7과 3.7 사이에는 상위호환이 가능하지 않은 것이 있는데 다음 사이트에 핵심 차이점들이 정리되어 있다.<br>
+[key difference 참고 사이트](https://jaxenter.com/differences-python-2-3-148432.html)
+* ```2to3``` 라는 tool을 이용하면 완벽하지는 않지만 version 2의 코드를 version 3의 코드로 어느정도 변환시켜준다.

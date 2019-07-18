@@ -66,7 +66,6 @@ else: stm
 ```
 
 <br>
-
 ## WHILE
 
 ```python
@@ -78,9 +77,7 @@ while condition:
 ```
 
 <br>
-
 ## FOR
-
 ```python
 for  변수 in list(or tuple, string):
     stm
@@ -90,3 +87,38 @@ for i in range(1,11)
 print(sum) # 55 출력.
 ```
 * range(시작숫자, 끝숫자) or range(끝숫자)에서 끝 숫자는 포함되지 않습니다.
+* range(start, stop, step) step씩 만큼 증가하면서 start부터 stop까지 반복합니다.
+<br>
+
+```python
+def func(array):
+  for num in array:
+    if num % 2 == 0:
+      print(num, "is even number")
+      break
+    else:
+      print(num, "is odd number")
+  else:
+    print("Compelte for condition")
+
+print("1st Case:")
+a = [1]
+func(a)
+
+'''
+1st Case:
+1 is odd number
+Compelte for condition
+'''
+
+print("2nd Case:")
+a = [1,2,3]
+func(a)
+
+'''
+2nd Case:
+1 is odd number
+2 is even number
+'''
+```
+* for 구문과 함께 else를 사용하면 for가 종료 조건에 의해 끝났을 경우 else 구문이 실행됩니다.
