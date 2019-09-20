@@ -48,7 +48,7 @@ Hyo-Eun Choi:
           title:            "Taxi Sharing Service"
           technologies:     "Ionic, few of AWS services, Firebase, Apache"
           responsibilities:
-            - "Implemented in Ionic as cross-platform and the number of active-user is about 400 students out of 3800 students."
+            - "Implemented in Angular with Ionic as cross-platform and the number of active-user is about 750 students out of 4000 students."
             - "Solved the problem of a small university which doesn't have any public transportation by saving at least 50% - 75% student's taxi fare."
             - "http://itaxi.handong.edu"
         - time:             "Jun 2016 - Aug 2017"
