@@ -1,6 +1,6 @@
 ---
 title: Shellshock Attack
-tags: security
+tags: security shellshock
 key: page-shellshock_attack
 cover: /assets/cover/cyber_security.png
 mathjax: true

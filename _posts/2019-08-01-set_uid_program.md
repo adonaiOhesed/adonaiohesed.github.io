@@ -1,6 +1,6 @@
 ---
 title: SET-UID Program
-tags: security
+tags: security set_uid
 key: page-set_uid_program
 cover: /assets/cover/cyber_security.png
 mathjax: true

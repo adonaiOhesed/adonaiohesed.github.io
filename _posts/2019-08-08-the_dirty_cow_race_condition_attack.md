@@ -1,6 +1,6 @@
 ---
 title: The Dirty COW Race Condition Attack
-tags: security
+tags: security dirty_cow
 key: page-the_dirty_cow_race_condition_attack
 cover: /assets/cover/cyber_security.png
 mathjax: true

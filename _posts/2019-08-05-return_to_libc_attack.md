@@ -1,6 +1,6 @@
 ---
 title: Return to libc Attack
-tags: security
+tags: security return_to_libc
 key: page-return_to_libc_attack
 cover: /assets/cover/cyber_security.png
 mathjax: true

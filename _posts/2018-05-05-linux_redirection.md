@@ -29,7 +29,6 @@ $ ./myscript 2> stderr.txt > /dev/null
 ```
 
 
-
 ## 출처
 
 1. [https://hongsii.github.io/2018/06/25/linux-standard-streams/](https://hongsii.github.io/2018/06/25/linux-standard-streams/)

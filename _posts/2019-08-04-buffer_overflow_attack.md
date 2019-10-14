@@ -1,6 +1,6 @@
 ---
 title: Buffer overflow attack
-tags: security
+tags: security buffer_overflow
 key: page-buffer_overflow_attack
 cover: /assets/cover/cyber_security.png
 mathjax: true
