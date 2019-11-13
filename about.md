@@ -40,7 +40,7 @@ key: page-about
 {% assign cv = site.data.cv[page.author] %}
 <div class="cv-body">
   <div class="md-card no-border">
-		<p>{{cv.profile}} <a href="https://adonaiohesed.github.io/2000/01/01/mission.html"> More detail </a> </p>
+		<p>{{cv.profile}} <a href="https://adonaiohesed.github.io/2018/01/01/mission.html"> More detail </a> </p>
   </div>
 
   <div class="md-card shadow">
