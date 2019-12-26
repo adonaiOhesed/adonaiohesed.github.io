@@ -7,6 +7,10 @@ Hyo-Eun Choi:
         - "C#, .NET Core, Elastic Search, Kibana, Logstash, Syslog-ng, Node-js, Nginx, Search-guard"
         - "IoT construction with ARTIK710, Nucleo, ARTIK cloud"
         - "Java, MySQL, Git, TFS, Firemon, Algosec, Docker"
+        - "Assembly, GDB, Ghidra, SciTools, Understand"
+        - "BOF, CSRF, XSS, Shellshock, TOCTTOU, Dirty COW, "
+        - "FTK's image"
+        - Experience - RSA Conference Schoalr, Lookhead Martine Communitor
     publications:
         - name:             "J. Kim, H. Choi, S. Bae"
           title:            "Efficient Parallel All-Pairs Shortest Paths Algorithm for Complex Graph Analysis"

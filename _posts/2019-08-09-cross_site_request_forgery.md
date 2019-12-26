@@ -11,6 +11,11 @@ mathjax_autoNumber: true
 
 * Victim이 malicious page를 보고 있을 때 공격자가 target website에 victim 신분으로 forged request를 보낼 수 있는 공격법이다.
 * Target website가 적절한 countermeasure가 없다면 third-party에 의해 들어온 request인지 authentic one이 보낸건지 구분 할 수가 없다.
+- 서버가 특정 클라이언트로부터 request를 받으면 거기에 대해 unique한 id를 부여한다. 그 Id를 세션이라고 부른다.
+- 클라이언트가 재접속하거나 할때 클라이언트를 인식할 수 있는 유일한 수단이다.
+- 서버와 연결을 끝내는 시점까지 세션이라고 부른다.
+- 
+
 
 ## Cross-Site Requests and Its Problems
 
