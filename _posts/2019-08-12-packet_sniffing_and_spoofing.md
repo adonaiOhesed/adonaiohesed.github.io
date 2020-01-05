@@ -39,9 +39,5 @@ mathjax_autoNumber: true
 * Windows에서는 다른 방식의 mechanism이 존재한다.
 <br><br>
 
-## Packet Sniffing
-* 
-
 ## Refrence
-
 * [COMPUTER SECURITY: A Hands-on Approach by Wenliang Du](https://www.amazon.com/Computer-Security-Hands-Approach-Wenliang/dp/154836794X)

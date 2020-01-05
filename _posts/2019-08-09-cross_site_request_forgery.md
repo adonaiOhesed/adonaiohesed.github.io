@@ -14,8 +14,6 @@ mathjax_autoNumber: true
 - 서버가 특정 클라이언트로부터 request를 받으면 거기에 대해 unique한 id를 부여한다. 그 Id를 세션이라고 부른다.
 - 클라이언트가 재접속하거나 할때 클라이언트를 인식할 수 있는 유일한 수단이다.
 - 서버와 연결을 끝내는 시점까지 세션이라고 부른다.
-- 
-
 
 ## Cross-Site Requests and Its Problems
 
@@ -36,17 +34,17 @@ mathjax_autoNumber: true
 ## Countermeasures
 * 많은 웹사이트들이 CSRF 취약점을 가지고 있는데 개발자들이 이것에 대한 피해를 신경쓰지 않기 때문에 이런일이 발생하는 것이다.
 * Defeating CSRF attacks은 쉽다.
- ### Using the referer Header
- * cross-site 인지 아닌지 알려주는 filed가 헤더 안에 존재하지만 이거는 browsing의 history를 알 수 있기 때문에 개인정보 보호에 의해 주로 사용하지 않는다.
- * 이런 방식은 사실 개인 정보가 드러날 수 있는 부분을 없애버리고 cross-site인지 아닌지만 확인 할 수 있도록 하고 새로운 필드를 만들면 되지만 아직까지 만들어지지는 않았다.
- ### Same-Site Cookies
- * 위의 방식을 해결할 부분과 비슷한 방식이 크롬과 오페라에 implemented되긴 했다.
- * 서버에 의해서 설정되며 value값이 Strict면 cross-site request가 없다는 것이고 Lax면 cross-site request가 있다는 것이다.
- ### Secret Token
- * 위의 방식은 대다수 브라우저에서 지원하지만 web application스스로도 대책이 있어야 하는 것이다.
- * 서버측에서 자기만 아는 비밀 토큰을 부여해서 same-site request에서 이 토큰을 가지고 있지 않다면 cross-site request라고 판단하면 되는 것이다.
- * page를 initiated하는 request에다가 랜덤 넘버를 부여하는 방법이 있다.
- * 또 다른 방법으로는 쿠키 안에 secret value를 넣는 방법이다.
+### Using the referer Header
+  * cross-site 인지 아닌지 알려주는 filed가 헤더 안에 존재하지만 이거는 browsing의 history를 알 수 있기 때문에 개인정보 보호에 의해 주로 사용하지 않는다.
+  * 이런 방식은 사실 개인 정보가 드러날 수 있는 부분을 없애버리고 cross-site인지 아닌지만 확인 할 수 있도록 하고 새로운 필드를 만들면 되지만 아직까지 만들어지지는 않았다.
+### Same-Site Cookies
+  * 위의 방식을 해결할 부분과 비슷한 방식이 크롬과 오페라에 implemented되긴 했다.
+  * 서버에 의해서 설정되며 value값이 Strict면 cross-site request가 없다는 것이고 Lax면 cross-site request가 있다는 것이다.
+### Secret Token
+  * 위의 방식은 대다수 브라우저에서 지원하지만 web application스스로도 대책이 있어야 하는 것이다.
+  * 서버측에서 자기만 아는 비밀 토큰을 부여해서 same-site request에서 이 토큰을 가지고 있지 않다면 cross-site request라고 판단하면 되는 것이다.
+  * page를 initiated하는 request에다가 랜덤 넘버를 부여하는 방법이 있다.
+  * 또 다른 방법으로는 쿠키 안에 secret value를 넣는 방법이다.
 
 
 ## Refrence

@@ -77,13 +77,12 @@ mathjax_autoNumber: true
 * 하지만 HTML markup을 지원하는 입장에서 분리하는게 결코 쉬운일은 아니다.
 * user input으로 부터 코드를 없애거나 가능하면 그것을 ineffective하게 바꾸는 2가지의 방식이 있다. 보통 아래 2가지 방법을 섞어서 XSS를 예방한다.
 ### Filter Approach
-* user input으로 부터 코드를 지운다는 것인데 이게 쉽지 않다.
-* script 태그 외에 여러가지 방법으로 javascript를 작동시킬 수 있는 방법들이 존재한다.
-* 이건 만드는게 쉽지 않기 때문에 jsoup와 같은 오픈소스 코드를 사용해도 좋다.
+  * user input으로 부터 코드를 지운다는 것인데 이게 쉽지 않다.
+  * script 태그 외에 여러가지 방법으로 javascript를 작동시킬 수 있는 방법들이 존재한다.
+  * 이건 만드는게 쉽지 않기 때문에 jsoup와 같은 오픈소스 코드를 사용해도 좋다.
 ### Encoding Approach
-* Code들을 브라우저가 볼 수 있는 방식(\&\lt; 같이 < 대신에 보여지는 방식)으로 바꾸는 것이다.
-* 브라우저가 representations하는 방식이 된다는 것은 코드는 실행되지 않는다는 것을 의미한다.
+  * Code들을 브라우저가 볼 수 있는 방식(\&\lt; 같이 < 대신에 보여지는 방식)으로 바꾸는 것이다.
+  * 브라우저가 representations하는 방식이 된다는 것은 코드는 실행되지 않는다는 것을 의미한다.
 
 ## Refrence
-
 * [COMPUTER SECURITY: A Hands-on Approach by Wenliang Du](https://www.amazon.com/Computer-Security-Hands-Approach-Wenliang/dp/154836794X)

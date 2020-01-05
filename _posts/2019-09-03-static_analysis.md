@@ -47,5 +47,3 @@ mathjax_autoNumber: true
     * Does the application use cryptography?
 * Interop 
     * Does the application use interop to call into native code?
-
-### 
