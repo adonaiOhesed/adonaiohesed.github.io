@@ -38,7 +38,7 @@ author:
   url       : adonaiohesed.github.io
   avatar    : # path or url of avatar image (square)
   bio       : Engineer who manage security.
-  email     : hchoi53@gmail.com
+  email     : choi@jhu.edu
   facebook  : # "user_name" the last part of your profile url, e.g. https://www.facebook.com/user_name
   twitter   : # "user_name" the last part of your profile url, e.g. https://twitter.com/user_name
   weibo     : # "user_id"   the last part of your profile url, e.g. https://www.weibo.com/user_id/profile?...
@@ -225,3 +225,12 @@ plugins:
   - jemoji
   
 theme: jekyll-text-theme
+
+
+## footer에 관한 정보
+#############################
+built-by: webjeda
+
+copyright:
+   name: webjeda
+   link: 'http://blog.webjeda.com'

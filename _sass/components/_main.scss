@@ -13,7 +13,7 @@
 
 .has-aside {
   .main {
-    max-width: map-get($layout, content-max-width) + map-get($layout, aside-width);
+    max-width: map-get($layout, content-max-width) - 150px; /////map-get($layout, aside-width);
     @include media-breakpoint-down(lg) {
       max-width: map-get($layout, content-max-width);
     }
@@ -24,5 +24,13 @@
   .main {
     width: 100%;
     max-width: 100%;
+  }
+}
+
+$on-palm:          600px;
+
+@mixin media-query($device) {
+  @media screen and (max-width: $device) {
+      @content;
   }
 }
