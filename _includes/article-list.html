@@ -21,7 +21,7 @@
   {%- if include.size == 'sm' -%}
   <div class="article-list grid gird--sm grid--p-3">
   {%- else -%}
-  <div class="article-list grid grid--p-3">
+  <div class="article-list grid grid--p-3" style="margin-left: 20px">
   {%- endif -%}
 {%- endif -%}
 
@@ -126,17 +126,26 @@
         </div>
       {%- else -%}
 
-        <div class="cell cell--12 cell--md-6 cell--lg-4">
+        <!-- 현재 적용되고 있는 테마 grid large type -->
+        <div class="panel cell cell--12 cell--md-6 cell--lg-4" >
           <div class="card card--flat">
             {%- if _article.cover -%}
-            <a href="{{ _article_url }}">
-              <div class="card__image"><img src="{{ _article_cover }}" /></div></a>
+            <a href="{{ _article_url }}" class="index-anchor">
+              <div class="card__image"><img src="{{ _article_cover }}" /></div>
             {%- endif -%}
+              <div class="panel-body">
+                <h3 class="panel-title pull-left">{{ _article.title | truncate: 25 }}</h3><span class="post-meta pull-right"><small>{{ _article.date | date: "%b %-d, %Y" }}</small></span>
+              </div>
+              <!--
               <div class="card__content">
                 <header>
                   <a href="{{ _article_url }}"><h2 class="card__header">{{ _article.title }}</h2></a>
                 </header>
               </div>
+              -->
+              <div class="panel-body"><small>
+                {{ _article.excerpt | strip_html | strip_newlines | truncate: 100 }}</small>
+              </div></a>
           </div>
         </div>
       {%- endif -%}

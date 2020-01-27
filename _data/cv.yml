@@ -1,16 +1,19 @@
 Hyo-Eun Choi:
-    profile: My mission is to do things on the side of the world's weak that can help them.
+    profile: Multiplayer Engineer with 2+ years of web & app development, Windows & Linux software, parallel programming, research and cybersecurity but focused on cybersecurity.
     skills:
-        - "C, C++, OpenMP, MPI"
-        - "Python, AWS EC2, AWS Lambda, AWS API Gateway, Django"
-        - "Ionic3+, Angular, Firebase, Apache, Flaske"
-        - "C#, .NET Core, Elastic Search, Kibana, Logstash, Syslog-ng, Node-js, Nginx, Search-guard"
-        - "IoT construction with ARTIK710, Nucleo, ARTIK cloud"
-        - "Java, MySQL, Git, TFS, Firemon, Algosec, Docker"
+        - "C, C++, C#, Python, Java, Javascript, Assembly"
+        - "SASS, TypeScript, Angular2+, Django, Ionic2+, Jekyll"
+        - "Metasploit framework, System Hacking, Network Hacking, Web Hacking"
+        - "Ghidra, GDB, Binvis, Veles"
+        - "Autopsy, FTK image, RegRipper, OpenStego"
+        - "SciTools, Understand"
         - "Assembly, GDB, Ghidra, SciTools, Understand"
-        - "BOF, CSRF, XSS, Shellshock, TOCTTOU, Dirty COW, "
-        - "FTK's image"
-        - Experience - RSA Conference Schoalr, Lookhead Martine Communitor
+        - "AWS EC2 & API Gateway & Lambda & VPC, Apache, Node.js, Flask, Nginx"
+        - "Oracle, MySQL, Firebase, MSSQL T-SQL"
+        - "OpenMP, MPI, TORQUE, PBS"
+        - ".Net Core, Shell script, Syslog-ng"
+        - "IoT construction with ARTIK710, Nucleo, ARTIK cloud"
+        - "ELK Stack, Git, TFS, OpenSSL, Docker, ARTIK710, Wireshark, NMap"
     publications:
         - name:             "J. Kim, H. Choi, S. Bae"
           title:            "Efficient Parallel All-Pairs Shortest Paths Algorithm for Complex Graph Analysis"
@@ -29,19 +32,20 @@ Hyo-Eun Choi:
           company:          "Eloicube"
           position:         "ELK + .NET Core Developer"
           responsibilities:
-            - "This project leads to new business source from 3 different clients."
-            - "Collecting over 20 types of logs by using syslog-ng and .net core program process ETL job. Kibana makes visualization for monitoring and the system consist of a cluster which uses TLS and HTTPS among nodes."
+            - "Visualized over 20 models of analyzing and monitoring firewall and established cluster and https among nodes"
+            - "Processed quite huge logs 1GB per day for delivering to Elastic Search on a remote server"
         - time:             "2018.02 - 2018.08"
           location:         "Kalamazoo"
           company:          "Western Michigan University"
           position:         "Research Intern"
           responsibilities:
-            - "An efficient parallel all-pairs shortest path algorithm on shared-memory parallel environments to achieve efficient calculation for large-scale real-world"
+            - "Tested a huge data which is 200K vertex and 2300K edge data under TORQUE system in 32 core, 256GB of main memory machine"
+            - "Proposed an efficient shared-memory parallel all pairs shortest path (APSP) algorithm from O(n3) to O(n2.4)  by achieving efficient calculation for large-scale real-world networks"
     projects:
         - time:             "Jan 2019 - Jun 2019"
           team:             "Leader of 3"
           title:            "Firewall & Network Security Management Software"
-          technologies:     "Elasticsearch Kibana Search-guard Syslog-ng .net core"
+          technologies:     "C#, NodeJs, .Net Core, Syslog-ng, MSSQL T-SQL, Flask, Docker, Elastic Search, Kibana, OpenSSL, Linux programing, Nginx"
           responsibilities:
             - "Construct system infrastructure as a team leader and leading researcher"
             - "After collecting various logs with syslog-ng, the logs are processed through .net core and then loaded into elastic search for visualizing with kibana"
@@ -50,16 +54,16 @@ Hyo-Eun Choi:
         - time:             "Aug 2017 - Sep 2018"
           team:             "Leader of 3"
           title:            "Taxi Sharing Service"
-          technologies:     "Ionic, few of AWS services, Firebase, Apache"
+          technologies:     "Javascript Angular+2 Ionic+2 Firebase Apache AWS EC2 & API Gateway & Lambda"
           responsibilities:
-            - "Implemented in Angular with Ionic as cross-platform and the number of active-user is about 750 students out of 4000 students."
-            - "Solved the problem of a small university which doesn't have any public transportation by saving at least 50% - 75% student's taxi fare."
+            - "Developed a cross-platform for Android & IOS and the number of active-user is about 1000 students out of 4000 students "
+            - "Built and deployed into microservices on AWS and local server with continuous integration"
             - "http://itaxi.handong.edu"
         - time:             "Jun 2016 - Aug 2017"
           team:             "Leader of 10"
           title:            "Intranet on Handong Global University"
-          technologies:     "Django, Nmap, Nikto, Nussus on Kali Linux"
+          technologies:     "Python, Django, Apache, MySQL, Nmap, Nikto, Nessus, Metasploit"
           responsibilities:
-            - "Implemented with Django by secure coding against SQL injection, CSRF attack, and vulnerability scanning using Nmap, Nikto, and Nussus on Kali Linux."
-            - "Replace existing intranet which has many vulnerabilities and out-of-date UX & UI designs."
+            - "Provided direction and leadership to cross-functional web teams while participating directly in development"
+            - "Analyzed security risks and mitigation for threats such as SQL injection, CSRF, XSS, and so on"
             - "https://i7.handong.edu"

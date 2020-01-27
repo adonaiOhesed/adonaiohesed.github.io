@@ -8,7 +8,7 @@ key: page-about
 
 <section class="cv-author-profile" itemprop="author" itemscope itemtype="http://schema.org/Person">
 	<div class="author-info">
-	<img src="{{author.picture}}" style="width:180px; border-radius: 20%;">
+	<img src="{{author.picture}}" style="width:330px; border-radius: 20%;">
 		<h1 class="author-title" itemprop="name" style="border-bottom-width:0; margin:0;">{{author.name}}</h1>
 		{% if author.bio %} <h2 class="author-bio" itemprop="description" style="border-bottom-width:0; margin:0;">{{author.bio}}</h2> {% endif %}
 		<div class="author-meta">

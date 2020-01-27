@@ -40,5 +40,4 @@ mathjax_autoNumber: true
 <br><br>
 
 ## Refrence
-
 * [COMPUTER SECURITY: A Hands-on Approach by Wenliang Du](https://www.amazon.com/Computer-Security-Hands-Approach-Wenliang/dp/154836794X)

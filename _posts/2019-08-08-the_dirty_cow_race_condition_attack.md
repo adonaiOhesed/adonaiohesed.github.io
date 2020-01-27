@@ -48,5 +48,4 @@ mathjax_autoNumber: true
 * 이전 공격들과 조금 다른 점이라고 하면 다른 것들은 target programe이 있어서 그것을 공략하는데 이것은 system의 허점을 노려서 우리가 스스로 공격 프로그램을 짜고 우리 코드를 통해 protected file에 접근하여 정보를 수정하는 공격이다.
 
 ## Refrence
-
 * [COMPUTER SECURITY: A Hands-on Approach by Wenliang Du](https://www.amazon.com/Computer-Security-Hands-Approach-Wenliang/dp/154836794X)

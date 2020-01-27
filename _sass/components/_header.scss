@@ -10,7 +10,11 @@
     @include media-breakpoint-down(md) {
       @include flex-direction(column);
     }
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
   }
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .header--dark {
@@ -87,7 +91,7 @@
 
   & > ul {
     
-    height: map-get($layout, header-height);
+    //height: map-get($layout, header-height);
     padding-bottom: 0;
     margin: 0;
     @include media-breakpoint-down(md) {
@@ -98,6 +102,7 @@
     @include align-items(center);
     @include media-breakpoint-down(md) {
       height: auto;
+      justify-content: center;
     }
     .search-button {
       @include media-breakpoint-down(md) {
