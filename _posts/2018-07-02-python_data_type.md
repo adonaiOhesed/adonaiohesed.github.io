@@ -93,7 +93,7 @@ multiline = "Life is too short\n You need python"
   |a.pop()| 마지막에 나오는 요소를 return하고 list 안에서는 삭제. ()안에는 index 넣어도 된다.
   |a.count(x)| list안에 있는 x 갯수 return
   |a.extend(x)| x라는 list를 a list 뒤에 추가 
-
+  |len(a)| a리스트의 원소 갯수
 <br>
 ### Tuple 
 * ()를 사용하고 tuple은 원소값을 직접 변경 불가. 시도시 error.
