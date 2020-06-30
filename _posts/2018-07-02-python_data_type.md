@@ -30,7 +30,6 @@ print(3.1/2.7)  # 1.1481481481481481
 print(3.1//2.7) # 1.0
 ```
 
-<br>
 ### String
 * "What's the matter?"<br>
 'He said to her, "You are so great!"'<br>
@@ -70,7 +69,7 @@ multiline = "Life is too short\n You need python"
   |a.replace(x,y)| a안에 있는 x(string)를 y(string)로 치환
   |a.split(x)| x를 기준으로 x를 제외한 남은 요소를 list 형태로 return ex) "String".split("tr") -> ['S' , 'ing'] 
 
-<br>
+
 ### List
 * []를 사용하고 string을 다루는 것과 매우 유사하다.
 * list는 array와 닮은 점이 많지만 다른 점은 list안에 서로 다른 data type이 존재할 수 있으며 크기가 또 다른 list가 담길 수 있다.
@@ -94,7 +93,7 @@ multiline = "Life is too short\n You need python"
   |a.count(x)| list안에 있는 x 갯수 return
   |a.extend(x)| x라는 list를 a list 뒤에 추가 
   |len(a)| a리스트의 원소 갯수
-<br>
+
 ### Tuple 
 * ()를 사용하고 tuple은 원소값을 직접 변경 불가. 시도시 error.
 * list보다는 access가 빠른 편이다.
@@ -138,7 +137,6 @@ q = tp[:1] + (5,) + tp[2:] # q == (1, 5, 3)
   ```
 [참고 사이트](https://wikidocs.net/71)
 
-<br>
 ### Dictionary
 * {}를 사용하며 {key:value, ...} pair로 구성.
 * java hash를 의미. 
@@ -169,7 +167,6 @@ dic['python'] = 'Easy'
   * 반환된 object로 ```for k in a.keys()``` 도 사용할 수도 있습니다.<br>
   * list(a.keys())로 하면 list로 변환 됩니다.
 
-<br>
 ### Set
 * 수학의 set 개념과 비슷합니다. unordered, not allowed redendent
 * list(set), tuple(set) 하면 set이 각각에 해당하는 걸로 변환.
@@ -191,7 +188,6 @@ s = set()
 s1 = {1,3,5}
 s2 = set([1,'a','ab']) # s2 == {'ab', 1, 'a'}
 ```
-
 #### Set 관련 함수들
 
   |함수|설명|
@@ -205,7 +201,6 @@ s2 = set([1,'a','ab']) # s2 == {'ab', 1, 'a'}
   |s.issuperset(a)| s가 a의 superset이면 True 아니면 False
   |s.isdisjoint(a)| s와 a가 교집합이 없으면 True  아니면 False
 
-<br> 
 ### Ture and False / None
 * 무슨 자료형이던지 있으면 True 없거나 0이면 False(==None)
 * 다음과 같은 코드들을 쓸 수 있다.
