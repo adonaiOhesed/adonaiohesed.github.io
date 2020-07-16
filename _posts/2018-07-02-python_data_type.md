@@ -79,7 +79,7 @@ multiline = "Life is too short\n You need python"
   a[1:2] = [1,2,3] => [1, 1, 2, 3, 1] # a[1:2]의 의미는 1과 2사이에 x를 넣겠다.
   ```
 * ```del a[1]```을 하면 index 1의 요소가 삭제되고 list 크기도 준다.
-#### list 관련 함수
+#### List 관련 함수
 
   |함수|설명|
   |:--|:--|
@@ -93,6 +93,29 @@ multiline = "Life is too short\n You need python"
   |a.count(x)| list안에 있는 x 갯수 return
   |a.extend(x)| x라는 list를 a list 뒤에 추가 
   |len(a)| a리스트의 원소 갯수
+
+#### List Comprehensions
+
+```python
+>>> squares = [x**2 for x in range(10)]
+>>> squares
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+>>> [(x, y) for x in [1,2,3] for y in [3,1,4] if x != y]
+[(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+
+>>> matrix = [
+...     [1, 2, 3, 4],
+...     [5, 6, 7, 8],
+...     [9, 10, 11, 12],
+... ]
+
+>>> [[row[i] for row in matrix] for i in range(4)]
+[[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+
+>>> list(zip(*matrix))
+[(1, 5, 9), (2, 6, 10), (3, 7, 11), (4, 8, 12)]
+```
 
 ### Tuple 
 * ()를 사용하고 tuple은 원소값을 직접 변경 불가. 시도시 error.
@@ -215,3 +238,8 @@ s2 = set([1,'a','ab']) # s2 == {'ab', 1, 'a'}
   var_none = None
   print(var_none)              # None
   ```
+
+### Type 확인하기
+```python
+print(type(whatever))
+```

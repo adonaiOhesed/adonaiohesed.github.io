@@ -17,10 +17,8 @@ def say_ho():
 say_ho() # ho~~
 ```
 * return값이 void면 indentation으로 다른 실행문을 계속 쓰면 된다.
-<br>함수를 탈출하고 싶으면 return 만 써도 된다.(break같은 느낌으로)
+함수를 탈출하고 싶으면 return 만 써도 된다.(break같은 느낌으로)
 
-
-<br>
 ```python
 def name(choice, *args)
 ```
@@ -38,8 +36,6 @@ def name(choice, *args)
   print(c)    # 7
   ```
 
-
-<br>
 ```python
 def sum_to_ten(n):
   if n < 1:
@@ -50,8 +46,6 @@ print(sum_to_ten(10)) # 55
 ```
 * recursive 가능
 
-
-<br>
 ```python
 def self(name, old, gender=True):
 ```
@@ -60,9 +54,7 @@ def self(name, old, gender=True):
 * 따라서 default를 컴파일러가 파악하기 위해서는 가장 오른쪽에서부터 배치해야지 오류가 일어나지 않는다.(가운데나 처음에 오면 안됨)
 * 함수 내에서 global 선언으로 외부 변수를 사용할 수 있는데 가급적 이건 사용하지 말자.
 
-<br>
 ## 클래스
-
 * class 내부에서 함수를 정의할 때 항상 맨 앞의 parameter로 self를 넣어줘야 한다.<br>이건 개발 원리와 관계가 있다.
 ```python
 class 이름(<super class name>):
@@ -92,3 +84,10 @@ def __truediv__(self, other):
     pass
 ```
 * 위의 경우 각 연산자(+,-,*,/) 쓸 때마다 위에서 정의한 그대로 작동된다.
+
+## Main 함수
+* if __name__ == "__main__": 로 시작하면 메인함수처럼 쓸 수 있다.
+```python
+if __name__ == '__main__':
+    print("This is main")
+```
